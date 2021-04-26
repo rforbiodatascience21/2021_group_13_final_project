@@ -1,6 +1,7 @@
 # Clear workspace ---------------------------------------------------------
 rm(list = ls())
 
+### Provided example code here
 
 # Load libraries ----------------------------------------------------------
 library("tidyverse")
@@ -11,20 +12,19 @@ source(file = "R/99_project_functions.R")
 
 
 # Load data ---------------------------------------------------------------
-gravier_data <- load("data/_raw/gravier.RData")
+dataframe <- load("some/data/example.RData")
 
 
 # Wrangle data ------------------------------------------------------------
-gravier_data_x <- gravier %>% pluck("x") %>% as.tibble()
-gravier_data_y <- gravier %>% pluck("y") %>% as.tibble()
+dataframe_wrangle <- dataframe %>% operations
+
 
 # Write data --------------------------------------------------------------
-write_tsv(gravier_data_x,
-          path = "data/01_gravier_data_x.tsv.gz")
-write_tsv(gravier_data_y,
-          path = "data/01_gravier_data_y.tsv.gz")
+write_tsv(dataframe_wrangle,
+          path = "data/01_data.tsv.gz")
+
 
 # Remove Data -------------------------------------------------------------
 
 
-rm(gravier_data_y,gravier_data_x,gravier_data,gravier)
+rm(dataframe, dataframe_wrangle)
