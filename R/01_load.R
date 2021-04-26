@@ -4,16 +4,14 @@ rm(list = ls())
 ### Provided example code here
 
 # Load libraries ----------------------------------------------------------
-library("tidyverse")
-
+library(tidyverse)
+library(Seurat)
 
 # Define functions --------------------------------------------------------
 source(file = "R/99_project_functions.R")
 
-
 # Load data ---------------------------------------------------------------
-dataframe <- load("some/data/example.RData")
-
+singlecell0 <- readRDS(file = "GSM4058963_025I.dgecounts.rds/GSM4058963_025I.dgecounts.rds")
 
 # Wrangle data ------------------------------------------------------------
 dataframe_wrangle <- dataframe %>% operations
@@ -25,6 +23,5 @@ write_tsv(dataframe_wrangle,
 
 
 # Remove Data -------------------------------------------------------------
-
-
 rm(dataframe, dataframe_wrangle)
+
