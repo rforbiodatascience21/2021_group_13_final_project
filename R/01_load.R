@@ -11,7 +11,7 @@ library(Seurat)
 source(file = "R/99_project_functions.R")
 
 # Load data ---------------------------------------------------------------
-GSM4058963_025I <- readRDS(file = "/Data/_raw/GSM4058963_025I.dgecounts.rds")
+GSM4058963_025I <- readRDS(file = "Data/_raw/GSM4058963_025I.dgecounts.rds")
 
 
 # Wrangle data ------------------------------------------------------------
