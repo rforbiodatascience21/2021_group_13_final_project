@@ -11,7 +11,8 @@ library(Seurat)
 source(file = "R/99_project_functions.R")
 
 # Load data ---------------------------------------------------------------
-singlecell0 <- readRDS(file = "GSM4058963_025I.dgecounts.rds/GSM4058963_025I.dgecounts.rds")
+GSM4058963_025I <- readRDS(file = "GSM4058963_025I.dgecounts.rds/GSM4058963_025I.dgecounts.rds")
+
 
 # Wrangle data ------------------------------------------------------------
 dataframe_wrangle <- dataframe %>% operations
