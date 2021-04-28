@@ -5,7 +5,6 @@ rm(list = ls())
 
 # Load libraries ----------------------------------------------------------
 library(tidyverse)
-library(Seurat)
 
 # Define functions --------------------------------------------------------
 source(file = "R/99_project_functions.R")
@@ -19,17 +18,14 @@ GSM4058963_025I <- read_rds(file = "Data/_raw/GSM4058963_025I.dgecounts.rds")
 umicount_exon_reads <- GSM4058963_025I %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
-  pluck("all")
+  pluck("all") %>% 
+  as_tibble()
 
-view(umicount_exon_reads)
-umicount_exon_reads %>% 
-  select("AAACCTGAGCAGCCTC")
 
 # Write data --------------------------------------------------------------
-write_tsv(dataframe_wrangle,
-          path = "data/01_data.tsv.gz")
-
+write_tsv(umicount_exon_reads,
+          path = "data/01_data_025I.tsv.gz")
 
 # Remove Data -------------------------------------------------------------
-rm(dataframe, dataframe_wrangle)
+rm(umicount_exon_reads, GSM4058963_025I)
 
