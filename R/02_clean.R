@@ -47,7 +47,8 @@ hist_data1 <-
 
 patient1 <-
   ggplot(hist_data1,aes(row_sum)) + 
-  geom_freqpoly()
+  geom_freqpoly() +
+  xlim(min(hist_data1),max(hist_data1))
 
 # lets next find good values to cut off (the small and the high ones)
 
