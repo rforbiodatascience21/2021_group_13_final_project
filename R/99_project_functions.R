@@ -32,11 +32,18 @@ remove_zero_rows <-function(patient){
   patient <-
     patient %>% 
     mutate(row_sum=
-             rowSums(patient),
-                           .before=AAACCTGAGCAGCCTC)
+             rowSums(patient))
   patient <-
     patient %>% 
-    filter(total==0)
+    filter(row_sum != 0)
   
   return(patient)
+}
+
+get_range <- function(patient){
+  range <-
+    patient %>% 
+    select(row_sum) %>% 
+    arrange(row_sum)
+  return(range)
 }
