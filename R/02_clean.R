@@ -85,6 +85,8 @@ data <- map2(data,ranges_refined,refine_data)
 
 # I couldnt think of a tidyverse way to do it. as of now im thinking, loop through rows, divide by row_sum
 # replace old row with new row, i dont think we want to go that way
+# the normalise function does that but its very slow
+
 
 # next up in the cleaning would be to join the genes expression data with some metadata
 
