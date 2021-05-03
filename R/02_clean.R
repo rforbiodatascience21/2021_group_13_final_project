@@ -96,4 +96,4 @@ data <- map2(data,ranges_refined,refine_data)
 # Remove Data -------------------------------------------------------------
 
 
-rm(variables created)
+#rm(variables created)
