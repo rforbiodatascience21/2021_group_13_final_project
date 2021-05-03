@@ -17,10 +17,10 @@ source(file = "R/99_project_functions.R")
 
 # load first patient
 patient_1 <- 
-  read_rds(file = "/Data/_raw/GSM4058963_025I.dgecounts.rds")
+  read_rds(file = "Data/_raw/GSM4058963_025I.dgecounts.rds")
 
 patient_1 <- 
-  data %>% 
+  patient_1 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
@@ -29,16 +29,16 @@ patient_1 <-
 # sample
 
 patient_1 <- 
-  sample_n(data,100)
+  sample_n(patient_1,100)
 
 # ---------------------
 
 
 patient_2 <- 
-  read_rds(file = "/Data/_raw/GSM4058907_465C.dgecounts.rds")
+  read_rds(file = "Data/_raw/GSM4058907_465C.dgecounts.rds")
 
 patient_2 <- 
-  data %>% 
+  patient_2 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
@@ -47,15 +47,15 @@ patient_2 <-
 # sample
 
 patient_2 <- 
-  sample_n(data,100)
+  sample_n(patient_2,100)
 
 #--------------------------
 
 patient_3 <- 
-  read_rds(file = "/Data/_raw/GSM4058921_003C.dgecounts.rds")
+  read_rds(file = "Data/_raw/GSM4058921_003C.dgecounts.rds")
 
 patient_3 <- 
-  data %>% 
+  patient_3 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
@@ -64,16 +64,16 @@ patient_3 <-
 # sample
 
 patient_3 <- 
-  sample_n(data,100)
+  sample_n(patient_3,100)
 
 #------------------------
 
 
 patient_4 <- 
-  read_rds(file = "/Data/_raw/GSM4058936_207CO.dgecounts.rds")
+  read_rds(file = "Data/_raw/GSM4058936_207CO.dgecounts.rds")
 
 patient_4 <- 
-  data %>% 
+  patient_4 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
@@ -82,16 +82,16 @@ patient_4 <-
 # sample
 
 patient_4 <- 
-  sample_n(data,100)
+  sample_n(patient_4,100)
 
 #-----------------------------
 
 
 patient_5 <- 
-  read_rds(file = "/Data/_raw/GSM4058944_056CO.dgecounts.rds")
+  read_rds(file = "Data/_raw/GSM4058944_056CO.dgecounts.rds")
 
 patient_5 <- 
-  data %>% 
+  patient_5 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
@@ -100,15 +100,15 @@ patient_5 <-
 # sample
 
 patient_5 <- 
-  sample_n(data,100)
+  sample_n(patient_5,100)
 
 #---------------------
 
 patient_6 <- 
-  read_rds(file = "/Data/_raw/GSM4058977_177I.dgecounts.rds")
+  read_rds(file = "Data/_raw/GSM4058977_177I.dgecounts.rds")
 
 patient_6 <- 
-  data %>% 
+  patient_6 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
@@ -117,20 +117,10 @@ patient_6 <-
 # sample
 
 patient_6 <- 
-  sample_n(data,100)
+  sample_n(patient_6,100)
 
 # Wrangle data ------------------------------------------------------------
-# We only want to look at the exons.
 
-data <- 
-  map(data,get_exon_umicounts)
-
-metadata <-
-  
-
-data <- 
-  map2(data,1000,sample_n)
-  
 
 # Write data --------------------------------------------------------------
 walk2(data,patients,write_umicounts)
