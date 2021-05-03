@@ -17,6 +17,8 @@ patients <-
 
 data <- map(patients,load_umicounts)
 
+#Loading metadata
+meta <-  read_table2("Data/_raw/GSE136831_AllCells.Samples.CellType.MetadataTable.txt", col_names = TRUE)
 ### Wrangle data ------------------------------------------------------------
 
 # check if there are rows with only zeros == cells with no expression, would correspond to empty droplets
