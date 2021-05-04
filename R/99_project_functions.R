@@ -3,18 +3,7 @@
 library(tidyverse)
 
 ### loading functions ###-------------------------------------------------------
-make_list_of_patient_data <- function(list_which_patients){
-  #data <- map(rds)
-  
-  
-  
-  data <- list()
-  for (patient in list_which_patients){
-    data <- c(data,list(read_rds(file = str_c("Data/_raw/",patient,".dgecounts.rds",sep=""))))
-  }
-  
-  return(data)
-}
+
 
 get_exon_umicounts <-function(patient){
  

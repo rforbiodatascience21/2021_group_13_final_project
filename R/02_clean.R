@@ -40,6 +40,90 @@ patient_6 <- read_csv(
 meta <-  read_table2("Data/_raw/GSE136831_AllCells.Samples.CellType.MetadataTable.txt", col_names = TRUE)
 ### Wrangle data ------------------------------------------------------------
 
+
+#--------getting gene names and cell barcodes----------------
+
+gene_mapping <-
+  read_csv("Data/_raw/ids.csv", col_names=c("value","Gene")) %>% 
+  tibble()
+
+Genes <- read_csv("Data/Genes")
+Genes <-
+  Genes %>% 
+  left_join(gene_mapping) %>% 
+  pluck("Gene")
+
+rm(gene_mapping)
+
+# Patient_1
+
+
+# transpose so that genes are columnns and rows are cells
+
+patient_1 <-
+  patient_1 %>% 
+  rownames_to_column() %>%  
+  pivot_longer(-rowname) %>% 
+  pivot_wider(names_from=rowname, values_from=value)
+
+
+# rename genes and make nice name for column with barcodes
+
+colnames(patient_1) <- c("Cell_Barcode",Genes)
+
+#-----now do the same for 5 other patients
+
+#Patient_2
+
+patient_2 <-
+  patient_2 %>% 
+  rownames_to_column() %>%  
+  pivot_longer(-rowname) %>% 
+  pivot_wider(names_from=rowname, values_from=value)
+
+colnames(patient_2) <- c("Cell_Barcode",Genes)
+
+#Patient_3
+
+patient_3 <-
+  patient_3 %>% 
+  rownames_to_column() %>%  
+  pivot_longer(-rowname) %>% 
+  pivot_wider(names_from=rowname, values_from=value)
+
+colnames(patient_3) <- c("Cell_Barcode",Genes)
+
+#Patient_4
+
+patient_4 <-
+  patient_4 %>% 
+  rownames_to_column() %>%  
+  pivot_longer(-rowname) %>% 
+  pivot_wider(names_from=rowname, values_from=value)
+
+colnames(patient_4) <- c("Cell_Barcode",Genes)
+
+#Patient_5
+
+patient_5 <-
+  patient_5 %>% 
+  rownames_to_column() %>%  
+  pivot_longer(-rowname) %>% 
+  pivot_wider(names_from=rowname, values_from=value)
+
+colnames(patient_5) <- c("Cell_Barcode",Genes)
+
+#Patient_6
+
+patient_6 <-
+  patient_6 %>% 
+  rownames_to_column() %>%  
+  pivot_longer(-rowname) %>% 
+  pivot_wider(names_from=rowname, values_from=value)
+
+colnames(patient_6) <- c("Cell_Barcode",Genes)
+
+
 # check if there are rows with only zeros == cells with no expression, would correspond to empty droplets
 data <- map(data,remove_zero_rows)
 

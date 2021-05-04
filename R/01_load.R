@@ -15,36 +15,27 @@ source(file = "R/99_project_functions.R")
 # Load data ---------------------------------------------------------------
 
 
-# load gene mapping table
-
-gene_mapping <-
-  read_csv("Data/_raw/ids.csv", col_names=c("value","Gene")) %>% 
-  tibble()
-
 # load first patient
 patient_1 <- 
   read_rds(file = "Data/_raw/GSM4058963_025I.dgecounts.rds")
 
-names <-
+
+#---------get gene identifiers from first patient, they are the same for all---------
+Genes <-
   patient_1 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>%   
-  pluck("Dimnames")
-
-Genes <-
-  names %>% 
+  pluck("Dimnames") %>% 
   pluck(1) %>% 
-  as.tibble() %>% 
-  left_join(gene_mapping) %>% 
-  pluck("Gene")
+  as.tibble()
 
+write_csv(Genes,file="Data/Genes")
+rm(Genes)
 
-Barcodes_cells <-
-  names %>% 
-  pluck(2)
+#-------------------
 
-rm(names,gene_mapping)
+# downsample in load as we cannot work with such big data on PCs
 
 patient_1 <- 
   patient_1 %>% 
@@ -53,21 +44,8 @@ patient_1 <-
   pluck("all") %>% 
   as.tibble() %>% 
   select(c(1:2000))
-  
-
-patient_1 <-
-  patient_1 %>% 
-  rownames_to_column() %>%  
-  pivot_longer(-rowname) %>% 
-  pivot_wider(names_from=rowname, values_from=value)
-
-colnames(patient_1) <- c("Cell_Barcode",Genes[c(1:2000)])
 
 
-# sample
-
-patient_1 <- 
-  sample_n(patient_1,100)
 
 # -----------------------------------------------------------------------
 
@@ -80,38 +58,9 @@ patient_2 <-
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
-  as_tibble()
-
-
-patient_2 <-
-  patient_1 %>% 
+  as_tibble() %>% 
   select(c(1:2000))
 
-patient_2 <-
-  patient_2 %>% 
-  rownames_to_column() %>%  
-  pivot_longer(-rowname) %>% 
-  pivot_wider(names_from=rowname, values_from=value)
-
-patient_2 <-
-  patient_2 %>% 
-  mutate(row_sum=
-           rowSums(patient_2))
-# this is apparently tidyverse but doesnt work
-#https://dplyr.tidyverse.org/articles/rowwise.html
-#rowwise()
-#mutate(row_sum=
-#         sum(c_across())
-#)
-patient_2 <-
-  patient_2 %>% 
-  filter(row_sum != 0)
-
-
-# downsample
-
-patient_2 <- 
-  sample_n(patient_2,100)
 
 #-------------------------------------------------------------------------
 
@@ -123,12 +72,10 @@ patient_3 <-
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
-  as_tibble()
+  as_tibble() %>% 
+  select(c(1:2000))
 
-# downsample
 
-patient_3 <- 
-  sample_n(patient_3,100)
 
 #-------------------------------------------------------------------------
 
@@ -141,12 +88,9 @@ patient_4 <-
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
-  as_tibble()
+  as_tibble() %>% 
+  select(c(1:2000))
 
-# downsample
-
-patient_4 <- 
-  sample_n(patient_4,100)
 
 #-------------------------------------------------------------------------
 
@@ -159,12 +103,9 @@ patient_5 <-
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
-  as_tibble()
+  as_tibble() %>% 
+  select(c(1:2000))
 
-# downsample
-
-patient_5 <- 
-  sample_n(patient_5,100)
 
 #-------------------------------------------------------------------------
 
@@ -176,12 +117,9 @@ patient_6 <-
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
-  as_tibble()
+  as_tibble() %>% 
+  select(c(1:2000))
 
-# downsample
-
-patient_6 <- 
-  sample_n(patient_6,100)
 
 # join data ------------------------------------------------------------
 
