@@ -118,16 +118,13 @@ patient_6 <-
 patient_6 <- 
   sample_n(patient_6,100)
 
-<<<<<<< HEAD
 # join data ------------------------------------------------------------
 
-=======
 # Write data --------------------------------------------------------------
 # Write each downsampled patient into zipped csv
 # Patient_1
 write.csv(patient_1,
           path = "Data/01_patient_1I.csv.gz")
->>>>>>> 685f31e8c42e19ea26b906c09aaf97873d1ebed0
 
 # Patient_2
 write.csv(patient_2,
