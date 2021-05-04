@@ -13,7 +13,9 @@ source(file = "R/99_project_functions.R")
 # Load data ---------------------------------------------------------------
 
 #Loading metadata
-meta <-  read_table2("Data/_raw/GSE136831_AllCells.Samples.CellType.MetadataTable.txt", col_names = TRUE)
+metadata <-
+  read_csv("Data/_raw/metatable.csv") %>% 
+  tibble()
 
 # Wrangle data ------------------------------------------------------------
 
