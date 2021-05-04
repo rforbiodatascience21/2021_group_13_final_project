@@ -36,8 +36,7 @@ patient_5 <- read_csv(
 patient_6 <- read_csv(
           file = "Data/01_patient_6I.csv.gz")
 
-#Loading metadata
-meta <-  read_table2("Data/_raw/GSE136831_AllCells.Samples.CellType.MetadataTable.txt", col_names = TRUE)
+
 ### Wrangle data ------------------------------------------------------------
 
 
