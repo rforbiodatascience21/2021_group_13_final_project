@@ -24,6 +24,15 @@ patient_1 <-
   pluck("exon") %>% 
   pluck("all") %>% 
   as_tibble()
+  
+#patient_1 <-
+#  patient_1 %>% 
+#  select()
+
+patient_1 %>%
+  rownames_to_column() %>%  
+  pivot_longer(-rowname) %>% 
+  pivot_wider(names_from=rowname, values_from=value) 
 
 # sample
 
