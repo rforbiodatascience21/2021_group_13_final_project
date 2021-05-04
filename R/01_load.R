@@ -64,20 +64,6 @@ patient_1 <-
 colnames(patient_1) <- c("Cell_Barcode",Genes[c(1:2000)])
 
 
-patient_1 <-
-  patient_1 %>% 
-  mutate(row_sum=
-           rowSums(patient_1))
-# this is apparently tidyverse but doesnt work
-#https://dplyr.tidyverse.org/articles/rowwise.html
-#rowwise()
-#mutate(row_sum=
-#         sum(c_across())
-#)
-patient_1 <-
-  patient_1 %>% 
-  filter(row_sum != 0)
-
 # sample
 
 patient_1 <- 
