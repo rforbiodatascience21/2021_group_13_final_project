@@ -121,27 +121,27 @@ patient_6 <-
 # Write each downsampled patient into zipped csv
 # Patient_1
 write.csv(patient_1,
-          path = "Data/01_patient_1.csv.gz")
+          path = "Data/01_patient_1I.csv.gz")
 
 # Patient_2
 write.csv(patient_2,
-          path = "Data/01_patient_2.csv.gz")
+          path = "Data/01_patient_2C.csv.gz")
 
 # Patient_3
 write.csv(patient_3,
-          path = "Data/01_patient_3.csv.gz")
+          path = "Data/01_patient_3C.csv.gz")
 
 # Patient_4
 write.csv(patient_4,
-          path = "Data/01_patient_4.csv.gz")
+          path = "Data/01_patient_4CO.csv.gz")
 
 # Patient_5
 write.csv(patient_5,
-          path = "Data/01_patient_5.csv.gz")
+          path = "Data/01_patient_5CO.csv.gz")
 
 # Patient_6
 write.csv(patient_6,
-          path = "Data/01_patient_6.csv.gz")
+          path = "Data/01_patient_6I.csv.gz")
 
 # Remove Data -------------------------------------------------------------
 rm(patient_1,patient_2,patient_3,patient_4,patient_5,patient_6)
