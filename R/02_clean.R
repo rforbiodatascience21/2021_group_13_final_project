@@ -47,13 +47,9 @@ gene_mapping <-
   read_csv("Data/_raw/ids.csv", col_names=c("value","Gene")) %>% 
   tibble()
 
-Genes <- read_csv("Data/Genes")
-Genes <-
-  Genes %>% 
-  left_join(gene_mapping) %>% 
-  pluck("Gene")
 
-rm(gene_mapping)
+
+
 
 # Patient_1
 
@@ -66,6 +62,11 @@ patient_1 <-
   pivot_longer(-rowname) %>% 
   pivot_wider(names_from=rowname, values_from=value)
 
+Genes <- read_csv("Data/Genes_1")
+Genes <-
+  Genes %>% 
+  left_join(gene_mapping) %>% 
+  pluck("Gene")
 
 # rename genes and make nice name for column with barcodes
 
@@ -81,6 +82,12 @@ patient_2 <-
   pivot_longer(-rowname) %>% 
   pivot_wider(names_from=rowname, values_from=value)
 
+Genes <- read_csv("Data/Genes_2")
+Genes <-
+  Genes %>% 
+  left_join(gene_mapping) %>% 
+  pluck("Gene")
+
 colnames(patient_2) <- c("Cell_Barcode",Genes)
 
 #Patient_3
@@ -90,6 +97,12 @@ patient_3 <-
   rownames_to_column() %>%  
   pivot_longer(-rowname) %>% 
   pivot_wider(names_from=rowname, values_from=value)
+
+Genes <- read_csv("Data/Genes_3")
+Genes <-
+  Genes %>% 
+  left_join(gene_mapping) %>% 
+  pluck("Gene")
 
 colnames(patient_3) <- c("Cell_Barcode",Genes)
 
@@ -101,6 +114,12 @@ patient_4 <-
   pivot_longer(-rowname) %>% 
   pivot_wider(names_from=rowname, values_from=value)
 
+Genes <- read_csv("Data/Genes_4")
+Genes <-
+  Genes %>% 
+  left_join(gene_mapping) %>% 
+  pluck("Gene")
+
 colnames(patient_4) <- c("Cell_Barcode",Genes)
 
 #Patient_5
@@ -111,6 +130,12 @@ patient_5 <-
   pivot_longer(-rowname) %>% 
   pivot_wider(names_from=rowname, values_from=value)
 
+Genes <- read_csv("Data/Genes_5")
+Genes <-
+  Genes %>% 
+  left_join(gene_mapping) %>% 
+  pluck("Gene")
+
 colnames(patient_5) <- c("Cell_Barcode",Genes)
 
 #Patient_6
@@ -120,6 +145,12 @@ patient_6 <-
   rownames_to_column() %>%  
   pivot_longer(-rowname) %>% 
   pivot_wider(names_from=rowname, values_from=value)
+
+Genes <- read_csv("Data/Genes_6")
+Genes <-
+  Genes %>% 
+  left_join(gene_mapping) %>% 
+  pluck("Gene")
 
 colnames(patient_6) <- c("Cell_Barcode",Genes)
 

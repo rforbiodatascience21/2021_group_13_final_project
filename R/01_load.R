@@ -30,7 +30,7 @@ Genes <-
   pluck(1) %>% 
   as.tibble()
 
-write_csv(Genes,file="Data/Genes")
+write_csv(Genes,file="Data/Genes_1")
 rm(Genes)
 
 #-------------------
@@ -61,6 +61,18 @@ patient_2 <-
   as_tibble() %>% 
   select(c(1:2000))
 
+Genes <-
+  patient_2 %>% 
+  pluck("umicount") %>% 
+  pluck("exon") %>% 
+  pluck("all") %>%   
+  pluck("Dimnames") %>% 
+  pluck(1) %>% 
+  as.tibble()
+
+write_csv(Genes,file="Data/Genes_2")
+rm(Genes)
+
 
 #-------------------------------------------------------------------------
 
@@ -74,6 +86,18 @@ patient_3 <-
   pluck("all") %>% 
   as_tibble() %>% 
   select(c(1:2000))
+
+Genes <-
+  patient_3 %>% 
+  pluck("umicount") %>% 
+  pluck("exon") %>% 
+  pluck("all") %>%   
+  pluck("Dimnames") %>% 
+  pluck(1) %>% 
+  as.tibble()
+
+write_csv(Genes,file="Data/Genes_3")
+rm(Genes)
 
 
 
@@ -92,6 +116,18 @@ patient_4 <-
   select(c(1:2000))
 
 
+Genes <-
+  patient_4 %>% 
+  pluck("umicount") %>% 
+  pluck("exon") %>% 
+  pluck("all") %>%   
+  pluck("Dimnames") %>% 
+  pluck(1) %>% 
+  as.tibble()
+
+write_csv(Genes,file="Data/Genes_4")
+rm(Genes)
+
 #-------------------------------------------------------------------------
 
 
@@ -106,6 +142,18 @@ patient_5 <-
   as_tibble() %>% 
   select(c(1:2000))
 
+Genes <-
+  patient_5 %>% 
+  pluck("umicount") %>% 
+  pluck("exon") %>% 
+  pluck("all") %>%   
+  pluck("Dimnames") %>% 
+  pluck(1) %>% 
+  as.tibble()
+
+write_csv(Genes,file="Data/Genes_5")
+rm(Genes)
+
 
 #-------------------------------------------------------------------------
 
@@ -119,6 +167,18 @@ patient_6 <-
   pluck("all") %>% 
   as_tibble() %>% 
   select(c(1:2000))
+
+Genes <-
+  patient_6 %>% 
+  pluck("umicount") %>% 
+  pluck("exon") %>% 
+  pluck("all") %>%   
+  pluck("Dimnames") %>% 
+  pluck(1) %>% 
+  as.tibble()
+
+write_csv(Genes,file="Data/Genes_6")
+rm(Genes)
 
 
 # join data ------------------------------------------------------------
