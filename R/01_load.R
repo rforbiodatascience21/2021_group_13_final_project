@@ -14,25 +14,69 @@ source(file = "R/99_project_functions.R")
 
 # Load data ---------------------------------------------------------------
 
+
+# load gene mapping table
+
+gene_mapping <-
+  read_csv("Data/_raw/ids.csv", col_names=c("value","Gene")) %>% 
+  tibble()
+
 # load first patient
 patient_1 <- 
   read_rds(file = "Data/_raw/GSM4058963_025I.dgecounts.rds")
+
+names <-
+  patient_1 %>% 
+  pluck("umicount") %>% 
+  pluck("exon") %>% 
+  pluck("all") %>%   
+  pluck("Dimnames")
+
+Genes <-
+  names %>% 
+  pluck(1) %>% 
+  as.tibble() %>% 
+  left_join(gene_mapping) %>% 
+  pluck("Gene")
+
+
+Barcodes_cells <-
+  names %>% 
+  pluck(2)
+
+rm(names,gene_mapping)
 
 patient_1 <- 
   patient_1 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
-  as_tibble()
+  as.tibble() %>% 
+  select(c(1:2000))
   
-#patient_1 <-
-#  patient_1 %>% 
-#  select()
 
-patient_1 %>%
+patient_1 <-
+  patient_1 %>% 
   rownames_to_column() %>%  
   pivot_longer(-rowname) %>% 
-  pivot_wider(names_from=rowname, values_from=value) 
+  pivot_wider(names_from=rowname, values_from=value)
+
+colnames(patient_1) <- c("Cell_Barcode",Genes[c(1:2000)])
+
+
+patient_1 <-
+  patient_1 %>% 
+  mutate(row_sum=
+           rowSums(patient_1))
+# this is apparently tidyverse but doesnt work
+#https://dplyr.tidyverse.org/articles/rowwise.html
+#rowwise()
+#mutate(row_sum=
+#         sum(c_across())
+#)
+patient_1 <-
+  patient_1 %>% 
+  filter(row_sum != 0)
 
 # sample
 
@@ -51,6 +95,32 @@ patient_2 <-
   pluck("exon") %>% 
   pluck("all") %>% 
   as_tibble()
+
+
+patient_2 <-
+  patient_1 %>% 
+  select(c(1:2000))
+
+patient_2 <-
+  patient_2 %>% 
+  rownames_to_column() %>%  
+  pivot_longer(-rowname) %>% 
+  pivot_wider(names_from=rowname, values_from=value)
+
+patient_2 <-
+  patient_2 %>% 
+  mutate(row_sum=
+           rowSums(patient_2))
+# this is apparently tidyverse but doesnt work
+#https://dplyr.tidyverse.org/articles/rowwise.html
+#rowwise()
+#mutate(row_sum=
+#         sum(c_across())
+#)
+patient_2 <-
+  patient_2 %>% 
+  filter(row_sum != 0)
+
 
 # downsample
 
