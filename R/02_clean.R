@@ -12,10 +12,29 @@ source(file = "R/99_project_functions.R")
 
 
 # Load data ---------------------------------------------------------------
-patients <-
-  list("GSM4058963_025I","GSM4058942_8CO")
+#Patient 1
+patient_1 <- read_csv(
+          file = "Data/01_patient_1I.csv.gz")
 
-data <- map(patients,load_umicounts)
+# Patient_2
+patient_2 <- read_csv(
+          file = "Data/01_patient_2C.csv.gz")
+
+# Patient_3
+patient_3 <- read_csv(
+          file = "Data/01_patient_3C.csv.gz")
+
+# Patient_4
+patient_4 <- read_csv(
+          file = "Data/01_patient_4CO.csv.gz")
+
+# Patient_5
+patient_5 <- read_csv(
+          file = "Data/01_patient_5CO.csv.gz")
+
+# Patient_6
+patient_6 <- read_csv(
+          file = "Data/01_patient_6I.csv.gz")
 
 #Loading metadata
 meta <-  read_table2("Data/_raw/GSE136831_AllCells.Samples.CellType.MetadataTable.txt", col_names = TRUE)
