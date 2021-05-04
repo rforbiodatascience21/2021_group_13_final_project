@@ -38,6 +38,9 @@ patient_6 <- read_csv(
 
 
 ### Wrangle data ------------------------------------------------------------
+metadata <-
+  read_csv("Data/_raw/metatable.csv") %>% 
+  tibble()
 
 
 #--------getting gene names and cell barcodes----------------
