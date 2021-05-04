@@ -1,10 +1,16 @@
 # Define project functions ------------------------------------------------
 
+library(tidyverse)
+
 ### loading functions ###-------------------------------------------------------
 make_list_of_patient_data <- function(list_which_patients){
+  #data <- map(rds)
+  
+  
+  
   data <- list()
   for (patient in list_which_patients){
-    data <- c(data,list(read_rds(file = paste0("Data/_raw/",patient,".dgecounts.rds"))))
+    data <- c(data,list(read_rds(file = str_c("Data/_raw/",patient,".dgecounts.rds",sep=""))))
   }
   
   return(data)
@@ -19,8 +25,12 @@ get_exon_umicounts <-function(patient){
       pluck("all") %>% 
       as_tibble()
   
+  umicount_exon_reads <- 
+    sample_n(data,100)
+  
   return(umicount_exon_reads)
-}
+
+  }
 
 write_umicounts <- function(patient_data,patient_name){
   write_csv(patient_data,
