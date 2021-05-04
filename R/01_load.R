@@ -53,14 +53,6 @@ patient_1 <-
 patient_2 <- 
   read_rds(file = "Data/_raw/GSM4058907_465C.dgecounts.rds")
 
-patient_2 <- 
-  patient_2 %>% 
-  pluck("umicount") %>% 
-  pluck("exon") %>% 
-  pluck("all") %>% 
-  as_tibble() %>% 
-  select(c(1:2000))
-
 Genes <-
   patient_2 %>% 
   pluck("umicount") %>% 
@@ -73,19 +65,21 @@ Genes <-
 write_csv(Genes,file="Data/Genes_2")
 rm(Genes)
 
-
-#-------------------------------------------------------------------------
-
-patient_3 <- 
-  read_rds(file = "Data/_raw/GSM4058921_003C.dgecounts.rds")
-
-patient_3 <- 
-  patient_3 %>% 
+patient_2 <- 
+  patient_2 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
   as_tibble() %>% 
   select(c(1:2000))
+
+
+
+
+#-------------------------------------------------------------------------
+
+patient_3 <- 
+  read_rds(file = "Data/_raw/GSM4058921_003C.dgecounts.rds")
 
 Genes <-
   patient_3 %>% 
@@ -99,6 +93,16 @@ Genes <-
 write_csv(Genes,file="Data/Genes_3")
 rm(Genes)
 
+patient_3 <- 
+  patient_3 %>% 
+  pluck("umicount") %>% 
+  pluck("exon") %>% 
+  pluck("all") %>% 
+  as_tibble() %>% 
+  select(c(1:2000))
+
+
+
 
 
 #-------------------------------------------------------------------------
@@ -106,15 +110,6 @@ rm(Genes)
 
 patient_4 <- 
   read_rds(file = "Data/_raw/GSM4058936_207CO.dgecounts.rds")
-
-patient_4 <- 
-  patient_4 %>% 
-  pluck("umicount") %>% 
-  pluck("exon") %>% 
-  pluck("all") %>% 
-  as_tibble() %>% 
-  select(c(1:2000))
-
 
 Genes <-
   patient_4 %>% 
@@ -128,19 +123,22 @@ Genes <-
 write_csv(Genes,file="Data/Genes_4")
 rm(Genes)
 
-#-------------------------------------------------------------------------
-
-
-patient_5 <- 
-  read_rds(file = "Data/_raw/GSM4058944_056CO.dgecounts.rds")
-
-patient_5 <- 
-  patient_5 %>% 
+patient_4 <- 
+  patient_4 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
   as_tibble() %>% 
   select(c(1:2000))
+
+
+
+
+#-------------------------------------------------------------------------
+
+
+patient_5 <- 
+  read_rds(file = "Data/_raw/GSM4058944_056CO.dgecounts.rds")
 
 Genes <-
   patient_5 %>% 
@@ -154,19 +152,21 @@ Genes <-
 write_csv(Genes,file="Data/Genes_5")
 rm(Genes)
 
-
-#-------------------------------------------------------------------------
-
-patient_6 <- 
-  read_rds(file = "Data/_raw/GSM4058977_177I.dgecounts.rds")
-
-patient_6 <- 
-  patient_6 %>% 
+patient_5 <- 
+  patient_5 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
   as_tibble() %>% 
   select(c(1:2000))
+
+
+
+
+#-------------------------------------------------------------------------
+
+patient_6 <- 
+  read_rds(file = "Data/_raw/GSM4058977_177I.dgecounts.rds")
 
 Genes <-
   patient_6 %>% 
@@ -179,6 +179,16 @@ Genes <-
 
 write_csv(Genes,file="Data/Genes_6")
 rm(Genes)
+
+patient_6 <- 
+  patient_6 %>% 
+  pluck("umicount") %>% 
+  pluck("exon") %>% 
+  pluck("all") %>% 
+  as_tibble() %>% 
+  select(c(1:2000))
+
+
 
 
 # join data ------------------------------------------------------------
