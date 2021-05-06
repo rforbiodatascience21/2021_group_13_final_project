@@ -11,6 +11,31 @@ source(file = "R/99_project_functions.R")
 
 
 # Load data ---------------------------------------------------------------
+patient_1 <- read_csv(
+  file = "Data/02_patient_1I.csv.gz")
+
+# Patient_2
+patient_2 <- read_csv(
+  file = "Data/02_patient_2C.csv.gz")
+
+# Patient_3
+patient_3 <- read_csv(
+  file = "Data/02_patient_3C.csv.gz")
+
+# Patient_4
+patient_4 <- read_csv(
+  file = "Data/02_patient_4CO.csv.gz")
+
+# Patient_5
+patient_5 <- read_csv(
+  file = "Data/02_patient_5CO.csv.gz")
+
+# Patient_6
+patient_6 <- read_csv(
+  file = "Data/02_patient_6I.csv.gz")
+
+
+
 
 #Loading metadata
 metadata <-
