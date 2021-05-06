@@ -11,12 +11,15 @@ source(file = "R/99_project_functions.R")
 
 
 # Load data ---------------------------------------------------------------
+
 patient_1 <- read_csv(
   file = "Data/02_patient_1I.csv.gz")
 patient_1 <-
   patient_1 %>% 
   mutate(Patient_ID = "1I",
-         .before=Cell_Barcode)
+         .before=Cell_Barcode) %>% 
+  select(-1) %>% 
+  slice(-1)
 
 # Patient_2
 patient_2 <- read_csv(
@@ -24,7 +27,9 @@ patient_2 <- read_csv(
 patient_2 <-
   patient_2 %>% 
   mutate(Patient_ID = "2C",
-         .before=Cell_Barcode)
+         .before=Cell_Barcode) %>% 
+  select(-1) %>% 
+  slice(-1)
 
 # Patient_3
 patient_3 <- read_csv(
@@ -32,7 +37,9 @@ patient_3 <- read_csv(
 patient_3 <-
   patient_3 %>% 
   mutate(Patient_ID = "3C",
-         .before=Cell_Barcode)
+         .before=Cell_Barcode) %>% 
+  select(-1) %>% 
+  slice(-1)
 
 # Patient_4
 patient_4 <- read_csv(
@@ -40,7 +47,9 @@ patient_4 <- read_csv(
 patient_4 <-
   patient_4 %>% 
   mutate(Patient_ID = "4CO",
-         .before=Cell_Barcode)
+         .before=Cell_Barcode) %>% 
+  select(-1) %>% 
+  slice(-1)
 
 # Patient_5
 patient_5 <- read_csv(
@@ -48,7 +57,9 @@ patient_5 <- read_csv(
 patient_5 <-
   patient_5 %>% 
   mutate(Patient_ID = "5CO",
-         .before=Cell_Barcode)
+         .before=Cell_Barcode) %>% 
+  select(-1) %>% 
+  slice(-1)
 
 # Patient_6
 patient_6 <- read_csv(
@@ -56,9 +67,12 @@ patient_6 <- read_csv(
 patient_6 <-
   patient_6 %>% 
   mutate(Patient_ID = "6I",
-         .before=Cell_Barcode)
+         .before=Cell_Barcode) %>% 
+  select(-1) %>% 
+  slice(-1)
 
 #Combining patients--------------------------------------------------------
+
 data <- bind_rows(
   patient_1,
   patient_2,
@@ -67,7 +81,6 @@ data <- bind_rows(
   patient_5,
   patient_6,
   .id = "patient_ID")
-
 
 rm(patient_1,patient_2,patient_3,patient_4,patient_5,patient_6)
 
