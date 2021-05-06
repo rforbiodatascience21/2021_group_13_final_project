@@ -13,36 +13,73 @@ source(file = "R/99_project_functions.R")
 # Load data ---------------------------------------------------------------
 patient_1 <- read_csv(
   file = "Data/02_patient_1I.csv.gz")
+patient_1 <-
+  patient_1 %>% 
+  mutate(Patient_ID = "1I",
+         .before=Cell_Barcode)
 
 # Patient_2
 patient_2 <- read_csv(
   file = "Data/02_patient_2C.csv.gz")
+patient_2 <-
+  patient_2 %>% 
+  mutate(Patient_ID = "2C",
+         .before=Cell_Barcode)
 
 # Patient_3
 patient_3 <- read_csv(
   file = "Data/02_patient_3C.csv.gz")
+patient_3 <-
+  patient_3 %>% 
+  mutate(Patient_ID = "3C",
+         .before=Cell_Barcode)
 
 # Patient_4
 patient_4 <- read_csv(
   file = "Data/02_patient_4CO.csv.gz")
+patient_4 <-
+  patient_4 %>% 
+  mutate(Patient_ID = "4CO",
+         .before=Cell_Barcode)
 
 # Patient_5
 patient_5 <- read_csv(
   file = "Data/02_patient_5CO.csv.gz")
+patient_5 <-
+  patient_5 %>% 
+  mutate(Patient_ID = "5CO",
+         .before=Cell_Barcode)
 
 # Patient_6
 patient_6 <- read_csv(
   file = "Data/02_patient_6I.csv.gz")
+patient_6 <-
+  patient_6 %>% 
+  mutate(Patient_ID = "6I",
+         .before=Cell_Barcode)
+
+#Combining patients--------------------------------------------------------
+data <- bind_rows(
+  patient_1,
+  patient_2,
+  patient_3,
+  patient_4,
+  patient_5,
+  patient_6,
+  .id = "patient_ID")
 
 
+rm(patient_1,patient_2,patient_3,patient_4,patient_5,patient_6)
 
+#Loading metadata and getting cell types--------------------------------------
 
-#Loading metadata
 metadata <-
   read_csv("Data/_raw/metatable.csv") %>% 
   tibble()
 
 # Wrangle data ------------------------------------------------------------
+
+
 
 # check if there are rows with only zeros == cells with no expression, would correspond to empty droplets
 data <- map(data,remove_zero_rows)
