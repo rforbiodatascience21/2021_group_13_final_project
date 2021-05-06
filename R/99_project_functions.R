@@ -45,7 +45,7 @@ remove_zero_rows <-function(patient){
     #)
   patient <-
     patient %>% 
-    filter(row_sum != 0)
+    filter(row_sum > 1000)
   
   return(patient)
 }
