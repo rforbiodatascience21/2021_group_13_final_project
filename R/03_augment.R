@@ -13,29 +13,70 @@ source(file = "R/99_project_functions.R")
 # Load data ---------------------------------------------------------------
 patient_1 <- read_csv(
   file = "Data/02_patient_1I.csv.gz")
+patient_1 <-
+  patient_1 %>% 
+  mutate(Patient_ID = "1I",
+         .before=Cell_Barcode)
 
 # Patient_2
 patient_2 <- read_csv(
   file = "Data/02_patient_2C.csv.gz")
+patient_2 <-
+  patient_2 %>% 
+  mutate(Patient_ID = "2C",
+         .before=Cell_Barcode)
 
 # Patient_3
 patient_3 <- read_csv(
   file = "Data/02_patient_3C.csv.gz")
+patient_3 <-
+  patient_3 %>% 
+  mutate(Patient_ID = "3C",
+         .before=Cell_Barcode)
 
 # Patient_4
 patient_4 <- read_csv(
   file = "Data/02_patient_4CO.csv.gz")
+patient_4 <-
+  patient_4 %>% 
+  mutate(Patient_ID = "4CO",
+         .before=Cell_Barcode)
 
 # Patient_5
 patient_5 <- read_csv(
   file = "Data/02_patient_5CO.csv.gz")
+patient_5 <-
+  patient_5 %>% 
+  mutate(Patient_ID = "5CO",
+         .before=Cell_Barcode)
 
 # Patient_6
 patient_6 <- read_csv(
   file = "Data/02_patient_6I.csv.gz")
+patient_6 <-
+  patient_6 %>% 
+  mutate(Patient_ID = "6I",
+         .before=Cell_Barcode)
 
+#Combining patients--------------------------------------------------------
+data <- bind_rows(
+  patient_1,
+  patient_2,
+  patient_3,
+  patient_4,
+  patient_5,
+  patient_6,
+  .id = "patient_ID")
 
+<<<<<<< HEAD
 #Loading metadata
+=======
+
+rm(patient_1,patient_2,patient_3,patient_4,patient_5,patient_6)
+
+#Loading metadata and getting cell types--------------------------------------
+
+>>>>>>> a28e39842c3b6b991a771cdc4412c1de2c8a015c
 metadata <-
   read_csv("Data/_raw/metatable.csv") %>% 
   tibble()
@@ -43,6 +84,7 @@ metadata <-
 # Wrangle data ------------------------------------------------------------
 
 
+<<<<<<< HEAD
 # If there are cells with fewer than 1000 transcripts recorded, these cells are filtered out from the 10000 starting cell count per patient
 data <- map(data,trancript_filter)
 
@@ -50,6 +92,11 @@ data <- map(data,trancript_filter)
 
 data <-map(data, mito_filter)
 
+=======
+
+# check if there are rows with only zeros == cells with no expression, would correspond to empty droplets
+data <- map(data,remove_zero_rows)
+>>>>>>> a28e39842c3b6b991a771cdc4412c1de2c8a015c
 
 # no there arent. now check if there are any with particularly high umi count which could correspond to droplets with more than one cell
 

@@ -183,4 +183,4 @@ write.csv(patient_6,
 # Remove Data -------------------------------------------------------------
 
 
-rm(patient_1,patient_2,patient_3,patient_4,patient_5,patient_6,Genes)
+rm(patient_1,patient_2,patient_3,patient_4,patient_5,patient_6,Genes, gene_mapping)
