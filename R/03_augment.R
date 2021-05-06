@@ -35,8 +35,6 @@ patient_6 <- read_csv(
   file = "Data/02_patient_6I.csv.gz")
 
 
-
-
 #Loading metadata
 metadata <-
   read_csv("Data/_raw/metatable.csv") %>% 
@@ -44,8 +42,14 @@ metadata <-
 
 # Wrangle data ------------------------------------------------------------
 
-# check if there are rows with only zeros == cells with no expression, would correspond to empty droplets
-data <- map(data,remove_zero_rows)
+
+# If there are cells with fewer than 1000 transcripts recorded, these cells are filtered out from the 10000 starting cell count per patient
+data <- map(data,trancript_filter)
+
+#Filtering out the cells where the transcripts of the mitochondrial genes represent more 20% of the sum of the transcripts for a cell
+
+data <-map(data, mito_filter)
+
 
 # no there arent. now check if there are any with particularly high umi count which could correspond to droplets with more than one cell
 
