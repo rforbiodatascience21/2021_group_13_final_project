@@ -32,7 +32,9 @@ load_umicounts <- function(patient_name){
   read_csv(paste0("Data/01_data_",patient_name,".csv.gz"))
 }
 
-remove_zero_rows <-function(patient){
+
+#Filters out the cells that have fewer than 1000 transcripts recorded
+trancript_filter <-function(patient){
   patient <-
     patient %>% 
     mutate(row_sum=
@@ -49,6 +51,87 @@ remove_zero_rows <-function(patient){
   
   return(patient)
 }
+
+
+
+#Summarizes the mitochondrial transcripts of the cell
+mitocompute <- function(patient){
+  
+  
+    summarize(
+      
+      #mt_count = length(value[week<=2]),
+      mt_sum = sum(MT-XXXX[str_match(patient, "MT-")])
+  
+    )
+  
+  "MT-"
+  
+  
+  return(patient)
+}
+
+
+#Filters out the cells whose mitochondrial transcript represent >20% of the total
+mito_filter  <-function(patient){
+  patient %>% 
+    mutate(row_sum=
+             rowSums(patient))
+  patient %>% 
+    mutate(mito_sum=
+             mitocompute(patient))
+  
+  patient <-
+    patient %>%
+    filter(mito_sum/row_sum<0.2)
+  
+
+  return(patient)
+}
+
+
+#Slices a patient and return the first x cells
+patient_slicer <- function(data,up,down){
+  
+  patient <- filter(data, Patient_ID =="1I" )%>%
+    slice(patient, up:down)
+  return(patient)
+}
+
+
+#Slices the metadata of a patient and return the first x cells identities
+meta_slicer <-function(meta, id){
+  
+  m_slice <-filter(meta, CellBarcode_Identity =="id")
+  m_slice<- slice(m_slice, up:down)
+  m_slice <-m_slice%>%
+    select(nUMI,nGene,CellType_Category,Subclass_Cell_Identity)
+  
+  return(m_slice)
+  
+}
+
+
+#Combining the patient's cells with their metadata
+combiner <- function(patient,m_slice){
+  
+  augmented_patient <- patient%>%
+    mutate(m_slice)
+  
+}
+#Binding the patients back into an augmented data set
+binder <- function (p1,p2,p3,p4,p5,p6){
+  
+  augmented_data <- bind_rows(
+    patient_1,
+    patient_2,
+    patient_3,
+    patient_4,
+    patient_5,
+    patient_6)
+  
+}
+
 
 get_range <- function(patient){
   range <-
