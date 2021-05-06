@@ -82,18 +82,20 @@ data <- bind_rows(
   patient_6,
   .id = "patient_ID")
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-#Loading metadata
-=======
+# Discarding the second "patient ID column
+data <-
+  data %>% 
+  select(-1) %>% 
+  slice(-1)
 
-=======
->>>>>>> 84d14d995df31a9cf04a0f3f8a4cbeec15b864ca
+
+
+#Loading metadata
+
 rm(patient_1,patient_2,patient_3,patient_4,patient_5,patient_6)
 
 #Loading metadata and getting cell types--------------------------------------
 
->>>>>>> a28e39842c3b6b991a771cdc4412c1de2c8a015c
 metadata <-
   read_csv("Data/_raw/metatable.csv") %>% 
   tibble()
@@ -101,7 +103,7 @@ metadata <-
 # Wrangle data ------------------------------------------------------------
 
 
-<<<<<<< HEAD
+
 # If there are cells with fewer than 1000 transcripts recorded, these cells are filtered out from the 10000 starting cell count per patient
 data <- map(data,trancript_filter)
 
@@ -109,11 +111,10 @@ data <- map(data,trancript_filter)
 
 data <-map(data, mito_filter)
 
-=======
 
 # check if there are rows with only zeros == cells with no expression, would correspond to empty droplets
 data <- map(data,remove_zero_rows)
->>>>>>> a28e39842c3b6b991a771cdc4412c1de2c8a015c
+
 
 # no there arent. now check if there are any with particularly high umi count which could correspond to droplets with more than one cell
 
