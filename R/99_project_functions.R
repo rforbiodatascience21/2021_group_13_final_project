@@ -34,56 +34,36 @@ load_umicounts <- function(patient_name){
 
 
 #Filters out the cells that have fewer than 1000 transcripts recorded
-trancript_filter <-function(patient){
-  patient <-
-    patient %>% 
-    mutate(row_sum=
-             rowSums(patient))
-    # this is apparently tidyverse but doesnt work
-    #https://dplyr.tidyverse.org/articles/rowwise.html
-    #rowwise()
-    #mutate(row_sum=
-    #         sum(c_across())
-    #)
-  patient <-
-    patient %>% 
-    filter(row_sum > 1000)
+transcript_filter <-function(data){
   
-  return(patient)
-}
-
-
-
-#Summarizes the mitochondrial transcripts of the cell
-mitocompute <- function(patient){
+  data <-
+    data %>% 
+    filter(nUMI > 1000)
   
-  
-    summarize(
-      
-      #mt_count = length(value[week<=2]),
-      mt_sum = sum(MT-XXXX[str_match(patient, "MT-")])
-  
-    )
-  
-  "MT-"
-  
-  
-  return(patient)
+  return(data)
 }
 
 
 #Filters out the cells whose mitochondrial transcript represent >20% of the total
-mito_filter  <-function(patient){
-  patient %>% 
-    mutate(row_sum=
-             rowSums(patient))
-  patient %>% 
-    mutate(mito_sum=
-             mitocompute(patient))
+mito_filter  <-function(data,id,up,down){
   
-  patient <-
-    patient %>%
-    filter(mito_sum/row_sum<0.2)
+  patient<- patient_slicer(data,id,up,down)
+  
+  mt_selection <-select(patient, starts_with("MT"))
+  
+  mt_selection<-mt_selection%>%
+    discard(~all(is.na(.x))) %>%
+    map_df(~.x)
+  
+  mt_sum<-mt_selection%>% 
+    mutate(mito_sum=rowSums(mt_selection))
+
+  #It doesn't work yet
+  #p_joined <- patient_1%>%left_join(select(mt_sum,mito_sum), by=character())
+  
+  patient <- patient%>%
+    mutate(mt_sum %>%
+    filter(mito_sum/nUMI<0.2))
   
 
   return(patient)
