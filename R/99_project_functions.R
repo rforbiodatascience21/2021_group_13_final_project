@@ -91,9 +91,9 @@ mito_filter  <-function(patient){
 
 
 #Slices a patient and return the first x cells
-patient_slicer <- function(data,up,down){
+patient_slicer <- function(data,id,up,down){
   
-  patient <- filter(data, Patient_ID =="1I" )%>%
+  patient <- filter(data, Patient_ID ==id )%>%
     slice(patient, up:down)
   return(patient)
 }
@@ -102,7 +102,7 @@ patient_slicer <- function(data,up,down){
 #Slices the metadata of a patient and return the first x cells identities
 meta_slicer <-function(meta, id){
   
-  m_slice <-filter(meta, CellBarcode_Identity =="id")
+  m_slice <-filter(meta, CellBarcode_Identity ==id)
   m_slice<- slice(m_slice, up:down)
   m_slice <-m_slice%>%
     select(nUMI,nGene,CellType_Category,Subclass_Cell_Identity)

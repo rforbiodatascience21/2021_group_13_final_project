@@ -102,14 +102,15 @@ metadata <-
 
 # Wrangle data ------------------------------------------------------------
 
-
+#Combine the patients' gene expression to the metadata data of the cells
+#run patient_slicer, meta_slicer, combiner and binder
 
 # If there are cells with fewer than 1000 transcripts recorded, these cells are filtered out from the 10000 starting cell count per patient
-data <- map(data,trancript_filter)
+filtered_data <- transcript_filter(augmented_data)
 
 #Filtering out the cells where the transcripts of the mitochondrial genes represent more 20% of the sum of the transcripts for a cell
-
-data <-map(data, mito_filter)
+#Run mitocompute and mito_filter
+#mitoless_data <-map(data, mito_filter)
 
 
 # check if there are rows with only zeros == cells with no expression, would correspond to empty droplets
