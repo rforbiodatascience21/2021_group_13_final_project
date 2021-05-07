@@ -86,14 +86,30 @@ meta_slicer <-function(meta, id){
   m_slice <-filter(meta, Subject_Identity ==id)
   m_slice<- slice(m_slice, up:down)
   m_slice <-m_slice%>%
-    select(nUMI,nGene,CellType_Category,Subclass_Cell_Identity)
+    select(CellBarcode_Identity,nUMI,nGene,CellType_Category,Subclass_Cell_Identity)
   
   return(m_slice)
   
 }
 
 
+#Matching the cells in the metadata file to the remaining cells in the patient data sets after the filtering
+meta_matcher <-function(meta,patient,id){
+  
+  m_slice <- meta_slicer(meta,id)
+  patient_barcodes<-select(patient,Cell_Barcode)
+  meta_barcodes<-filter(metadata,Subject_Identity==id)
+  meta_barcodes<-select(barcodes,Subject_Identity)
+  #From that point on it doesn't work yet
+  patient_barcodes<-meta_barcodes%>%mutate(Subject_Identity)
+  patient_barcodes <- within(patient_barcodes, str_c(Subject_Identity,Cell_Barcode))
+  patient <- patient_barcodes%>%mutate(main_column)
+  patient<-patient%>%left_join(m_slice, by="CellBarcode_Identity")
+}
+
+
 #Combining the patient's cells with their metadata
+#Change this to drop the second CellBarcode_Identity column that is appended in meta_slicer
 combiner <- function(patient,m_slice){
   
   augmented_patient <- patient%>%

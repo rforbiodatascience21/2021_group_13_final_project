@@ -109,13 +109,15 @@ metadata <-
 filtered_data <- transcript_filter(augmented_data)
 
 #Filtering out the cells where the transcripts of the mitochondrial genes represent more 20% of the sum of the transcripts for a cell
-#Run mitocompute and mito_filter
+#Run mito_filter and binder
 #mitoless_data <-map(data, mito_filter)
 
 
 # check if there are rows with only zeros == cells with no expression, would correspond to empty droplets
 data <- map(data,remove_zero_rows)
 
+#Filter the cells from the metadata file by keeping only those that match between files
+#Run meta_matcher
 
 # no there arent. now check if there are any with particularly high umi count which could correspond to droplets with more than one cell
 
