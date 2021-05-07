@@ -58,12 +58,12 @@ mito_filter  <-function(data,id,up,down){
   mt_sum<-mt_selection%>% 
     mutate(mito_sum=rowSums(mt_selection))
 
-  patient<- patient%>%
+  patient <- patient %>%
     mutate(
       select(
         mt_sum,mito_sum))
   
-  patient <- patient%>%
+  patient <- patient %>%
     filter(mito_sum/nUMI<0.2)
   
 
