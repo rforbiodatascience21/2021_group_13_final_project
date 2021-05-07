@@ -105,7 +105,8 @@ metadata <-
   read_tsv("Data/_raw/GSE136831_AllCells.Samples.CellType.MetadataTable.txt") %>% 
   tibble() %>% 
   select(CellBarcode_Identity,nUMI,nGene,CellType_Category,Subclass_Cell_Identity, Subject_Identity) %>% 
-  rename(Patient_ID = Subject_Identity) %>% 
+  rename(Patient_ID = Subject_Identity,
+         Cell_Barcode = CellBarcode_Identity) %>% 
   filter(
     Patient_ID == "025I" |
       Patient_ID == "465C" |
@@ -113,15 +114,16 @@ metadata <-
       Patient_ID == "207CO"|
       Patient_ID == "056CO"|
       Patient_ID == "177I"
-      )
-
+      ) %>% 
+  mutate(Cell_Barcode=str_replace_all(Cell_Barcode,"(.+_)(.+)","\\2"))
 #join metadata and patient data---------------------------------------------------------
 
 data <- left_join(
   data,
   metadata,
-  by = "Patient_ID"
-)
+  by = c("Patient_ID","Cell_Barcode")
+) %>% 
+  relocate("nGene","nUMI","CellTyoe_Category","Subclass_Cell_Identity",.after="Cell_Barcode")
 
 # Wrangle data ------------------------------------------------------------
 
