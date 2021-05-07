@@ -81,7 +81,7 @@ patient_slicer <- function(data,id,up,down){
 
 
 #Slices the metadata of a patient and return the first x cells identities
-meta_slicer <-function(meta, id){
+meta_slicer <-function(meta, id, up, down){
   
   m_slice <-filter(meta, Subject_Identity ==id)
   m_slice<- slice(m_slice, up:down)

@@ -79,14 +79,15 @@ data <- bind_rows(
   patient_3,
   patient_4,
   patient_5,
-  patient_6,
-  .id = "patient_ID")
+  patient_6)
 
-# Discarding the second "patient ID column
+# Replacing NAs (gene not present in the patient) by 0
 data <-
-  data %>% 
-  select(-1) %>% 
-  slice(-1)
+  data %>%
+  mutate(
+    across(everything(),
+           ~replace_na(.x,0))
+  )
 
 
 
