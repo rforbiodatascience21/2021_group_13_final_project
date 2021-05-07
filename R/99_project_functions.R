@@ -58,12 +58,13 @@ mito_filter  <-function(data,id,up,down){
   mt_sum<-mt_selection%>% 
     mutate(mito_sum=rowSums(mt_selection))
 
-  #It doesn't work yet
-  #p_joined <- patient_1%>%left_join(select(mt_sum,mito_sum), by=character())
+  patient<- patient%>%
+    mutate(
+      select(
+        mt_sum,mito_sum))
   
   patient <- patient%>%
-    mutate(mt_sum %>%
-    filter(mito_sum/nUMI<0.2))
+    filter(mito_sum/nUMI<0.2)
   
 
   return(patient)
@@ -82,7 +83,7 @@ patient_slicer <- function(data,id,up,down){
 #Slices the metadata of a patient and return the first x cells identities
 meta_slicer <-function(meta, id){
   
-  m_slice <-filter(meta, CellBarcode_Identity ==id)
+  m_slice <-filter(meta, Subject_Identity ==id)
   m_slice<- slice(m_slice, up:down)
   m_slice <-m_slice%>%
     select(nUMI,nGene,CellType_Category,Subclass_Cell_Identity)
