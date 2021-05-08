@@ -125,15 +125,20 @@ data <- left_join(
 ) %>% 
   relocate("nGene","nUMI","CellType_Category","Subclass_Cell_Identity",.after="Cell_Barcode") 
 
-# introduce group label
+# introduce group label and make that and Patient_ID factors
 data <-
   data %>% 
   mutate(group = 
-           case_when(
+           factor(
+             case_when(
              str_detect(Patient_ID,"I")~"IPF",
              str_detect(Patient_ID,"CO")~"COPD",
-             TRUE~"Control"),
-         .after=Patient_ID)
+             TRUE~"Control")
+           ),         
+         .after=Patient_ID,
+         Patient_ID=
+           factor(Patient_ID)
+  )
 
 rm(metadata)
 
