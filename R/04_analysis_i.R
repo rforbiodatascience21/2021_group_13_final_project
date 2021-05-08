@@ -5,6 +5,7 @@
 # Load libraries ----------------------------------------------------------
 library("tidyverse")
 library("viridis")
+library("broom")
 
 
 # Define functions --------------------------------------------------------
@@ -82,24 +83,90 @@ cells_type_per_group <-
     theme(axis.title.x=element_blank(),
           axis.text.x=element_blank(),
           axis.ticks.x=element_blank())
-  
 
-ciliated <-
+
+  ### models ###
+  
+# Take only ciliated cells,
+# pivot longer to get genes as rows for modelling
+# normalise the Counts, !!!!!WE NEED TO DO THAT BEFORE!!!! because I think otherwise it will be normalised according to all levels, not the specific cells one
+
+  
+# Proposed solution, cant run this now
+  
+normalised <-
+  data %>% 
+  select(8:ncol(.)) %>% 
+  map(normalise)
+  
+  
+  
+ciliated_COPD <-
     data %>% 
     filter(Subclass_Cell_Identity=="Ciliated") %>% 
     pivot_longer(
-      cols = 7:ncol(data),
+      cols = 8:ncol(data),
       names_to = "Gene",
       values_to = "Counts"
     ) %>% 
-    sample_n(250) %>% 
+    select(group,Gene,Counts) %>%
+#%>%
+    #sample_n(250) %>% 
     mutate(
       Counts=normalise(Counts)
-    )
+    ) %>% 
+  filter(group != "IPF") %>% 
+  group_by(Gene) %>% 
+  nest() %>% 
+  ungroup()
+
+# same for IPF
+
+ciliated_IPF <-
+  data %>% 
+  filter(Subclass_Cell_Identity=="Ciliated") %>% 
+  pivot_longer(
+    cols = 8:ncol(data),
+    names_to = "Gene",
+    values_to = "Counts"
+  ) %>% 
+  select(group,Gene,Counts) %>%
+  #%>%
+  #sample_n(250) %>% 
+  mutate(
+    Counts=normalise(Counts)
+  ) %>% 
+  filter(group != "IPF") %>% 
+  group_by(Gene) %>% 
+  nest() %>% 
+  ungroup()
   
-ciliated_models <-
-    ciliated %>% 
-    mutate(mdl=map(data,~glm(group~count,data=.x,family=binomial(link="logit"))))
+
+# now delete data as its not needed AND there is a column in the nested dataframes called data
+
+rm(data)
+
+# make two models
+
+COPD_model <-
+  ciliated_COPD %>% 
+  mutate(mdl=map(data,
+                 ~glm(group~Counts,
+                      data=.x,
+                      family=binomial(link="logit"))),
+         tidy=map(mdl,
+                  tidy,
+                  conf.int=TRUE))
+
+IPF_model <-
+  ciliated_IPF %>% 
+  mutate(mdl=map(data,
+                 ~glm(group~Counts,
+                      data=.x,
+                      family=binomial(link="logit"))),
+         tidy=map(mdl,
+                  tidy,
+                  conf.int=TRUE))
   
 # Save Plots --------------------------------------------------------------
 
