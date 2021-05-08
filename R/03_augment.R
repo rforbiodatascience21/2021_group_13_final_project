@@ -123,7 +123,17 @@ data <- left_join(
   metadata,
   by = c("Patient_ID","Cell_Barcode")
 ) %>% 
-  relocate("nGene","nUMI","CellType_Category","Subclass_Cell_Identity",.after="Cell_Barcode")
+  relocate("nGene","nUMI","CellType_Category","Subclass_Cell_Identity",.after="Cell_Barcode") 
+
+# introduce group label
+data <-
+  data %>% 
+  mutate(group = 
+           case_when(
+             str_detect(Patient_ID,"I")~"IPF",
+             str_detect(Patient_ID,"CO")~"COPD",
+             TRUE~"Control"),
+         .after=Patient_ID)
 
 rm(metadata)
 
