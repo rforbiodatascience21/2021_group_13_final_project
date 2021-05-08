@@ -17,9 +17,9 @@ data <-
   read_csv("Data/03_data.csv")
 
 
-# Model Data --------------------------------------------------------------
+# Model and Plot Data --------------------------------------------------------------
 
-# maing some summary statistics
+# making some summary statistics
 
 ### first lets reorder the data according to groups
 
@@ -83,12 +83,24 @@ cells_type_per_group <-
           axis.text.x=element_blank(),
           axis.ticks.x=element_blank())
   
-#cells_type_plot
+
+ciliated <-
+    data %>% 
+    filter(Subclass_Cell_Identity=="Ciliated") %>% 
+    pivot_longer(
+      cols = 7:ncol(data),
+      names_to = "Gene",
+      values_to = "Counts"
+    ) %>% 
+    sample_n(250) %>% 
+    mutate(
+      Counts=normalise(Counts)
+    )
   
-
-# Plot Data ---------------------------------------------------------------
-
-
+ciliated_models <-
+    ciliated %>% 
+    mutate(mdl=map(data,~glm(group~count,data=.x,family=binomial(link="logit"))))
+  
 # Save Plots --------------------------------------------------------------
 
 

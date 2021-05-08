@@ -162,31 +162,7 @@ refine_data <- function(data,ranges_refined){
 
 
 # this is a very slow function
-normalise <- function(patient){
-  first_row <-
-    patient %>% 
-    slice(1) %>% 
-    as.numeric()
-  first_row_sum <-
-    first_row %>% 
-    pluck(ncol(patient))
-  result <- first_row/first_row_sum
-  
-  
-  seq = 1:nrow(patient)
-  for (row in seq){
-    cur_row <-
-      patient %>% 
-      slice(row) %>% 
-      as.numeric()
-    cur_row_sum <-
-      cur_row %>% 
-      pluck(ncol(patient))
-    cur_row <- cur_row/cur_row_sum
-    result <- rbind(result,cur_row)
-  }
-    return(as.tibble(result))
-}
+
 
 normalise <- function(x) {
   return ((x - min(x)) / (max(x) - min(x)))
