@@ -187,3 +187,7 @@ normalise <- function(patient){
   }
     return(as.tibble(result))
 }
+
+normalise <- function(x) {
+  return ((x - min(x)) / (max(x) - min(x)))
+}

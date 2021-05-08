@@ -43,7 +43,7 @@ cells_per_group_and_patient <-
     title = "Cell Counts per Group and Patient after Filtering"
   )
 
-###How many cells are there of each type in each group 
+### How many cells are there of each type in each group 
   
 sum_per_group <-
     data %>% 
@@ -67,6 +67,8 @@ cells_type_per_group <-
     names_to = "CellType_Category",
     values_to = "cell_count"
   )
+
+### How are cell types distributed
 
 # cells_type_plot
   cells_type_per_group %>% 
