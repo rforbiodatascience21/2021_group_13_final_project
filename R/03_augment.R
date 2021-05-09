@@ -185,9 +185,6 @@ data <- data %>%
       nUMI < 0.2)
 
 
-
-
-
 # now check if there are any NAs remaining
 data %>% 
   filter(
