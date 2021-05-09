@@ -1,14 +1,15 @@
-# Clear workspace ---------------------------------------------------------
+# Clear workspace --------------------------------------------------------------
 #rm(list = ls())
 
-# Load libraries ----------------------------------------------------------
+# Load libraries ---------------------------------------------------------------
 library("tidyverse")
 
-# Define functions --------------------------------------------------------
+
+# Define functions -------------------------------------------------------------
 source(file = "R/99_project_functions.R")
 
-# Load data ---------------------------------------------------------------
 
+# Load data --------------------------------------------------------------------
 # Patient_1
 patient_1 <- 
   read_csv(file = "Data/02_patient_1I.csv.gz")
@@ -76,8 +77,7 @@ patient_6 <-
   slice(-1)
 
 
-#Combining patients--------------------------------------------------------
-
+# Combining patients------------------------------------------------------------
 data <- bind_rows(
   patient_1,
   patient_2,
@@ -85,6 +85,7 @@ data <- bind_rows(
   patient_4,
   patient_5,
   patient_6)
+
 
 # Replacing NAs (gene not present in the patient but in another) by 0
 data <-
@@ -98,8 +99,7 @@ data <-
 rm(patient_1, patient_2, patient_3, patient_4, patient_5, patient_6)
 
 
-#Loading metadata --------------------------------------------------------------
-
+# Loading metadata -------------------------------------------------------------
 metadata <-
   read_tsv("Data/_raw/GSE136831_AllCells.Samples.CellType.MetadataTable.txt") %>% 
   tibble() %>% 
@@ -120,55 +120,58 @@ metadata <-
   mutate(Cell_Barcode = str_replace_all(Cell_Barcode,"(.+_)(.+)","\\2"))
 
 
-#join metadata and patient data---------------------------------------------------------
+# Join metadata and patient data------------------------------------------------
 data <- left_join(data,
                   metadata,
-                  by = c("Patient_ID","Cell_Barcode")) %>% 
+                  by = c("Patient_ID",
+                         "Cell_Barcode")) %>% 
   relocate("nGene",
            "nUMI",
            "CellType_Category",
            "Subclass_Cell_Identity",
-           .after="Cell_Barcode") 
+           .after = "Cell_Barcode") 
 
 
-# introduce group label and make that and Patient_ID factors
+# Introduce group label and make that and Patient_ID factors
 data <-
   data %>% 
   mutate(group = 
            factor(
              case_when(
-             str_detect(Patient_ID,"I")~"IPF",
-             str_detect(Patient_ID,"CO")~"COPD",
-             TRUE~"Control")
+             str_detect(Patient_ID,"I") ~ "IPF",
+             str_detect(Patient_ID,"CO") ~ "COPD",
+             TRUE ~ "Control")
            ),         
-         .after=Patient_ID,
-         Patient_ID=
+         .after = Patient_ID,
+         Patient_ID =
            factor(Patient_ID)
   )
 
 rm(metadata)
 
-# now there are quite some NAs as the metadata apparently contains only cells filtered by the authors
+
+# Now there are quite some NAs as the metadata apparently contains only cells filtered by the authors
 # we will filter further to second-check this filtering. thus if it works well, the NAs will mostly be gone
 
-# Wrangle data ------------------------------------------------------------
+# Wrangle data -----------------------------------------------------------------
 
-#Combine the patients' gene expression to the metadata data of the cells
-#run patient_slicer, meta_slicer, combiner and binder
+# Combine the patients' gene expression to the metadata data of the cells
+# run patient_slicer, meta_slicer, combiner and binder
 
 # If there are cells with fewer than 2000 transcripts recorded, these cells are filtered out from the 10000 starting cell count per patient
 data <-
   data %>% 
   filter(nUMI > 2000)
 
-#Filtering out the cells where the transcripts of the mitochondrial genes represent more 20% of the sum of the transcripts for a cell
-#Run mito_filter
 
-mt_selection <- select(data, starts_with("MT"))
+# Filtering out the cells where the transcripts of the mitochondrial genes represent more 20% of the sum of the transcripts for a cell
+# Run mito_filter
+mt_selection <- select(data, 
+                       starts_with("MT"))
 
 mt_sum <- mt_selection %>% 
   mutate(
-    mito_sum=
+    mito_sum =
       rowSums(mt_selection))
 
 data <- data %>%
@@ -176,16 +179,13 @@ data <- data %>%
     select(
       mt_sum,
       mito_sum),
-    .after=Cell_Barcode)
-
-data <- data %>%
+    .after = Cell_Barcode) %>%
   filter(
-    mito_sum/
-           nUMI<0.2)
+    mito_sum /
+      nUMI < 0.2)
 
 
 # now check if there are any NAs remaining
-
 data %>% 
   filter(
   across(
@@ -194,13 +194,14 @@ data %>%
   )
 )
 
+
 # --> no NAs left
 
-# Write data --------------------------------------------------------------
+# Write data -------------------------------------------------------------------
+write_csv(data, 
+          file = "Data/03_data.csv")
 
-write_csv(data, file = "Data/03_data.csv")
 
-# Remove Data -------------------------------------------------------------
-
+# Remove Data ------------------------------------------------------------------
 rm(data,mt_selection,mt_sum)
 
