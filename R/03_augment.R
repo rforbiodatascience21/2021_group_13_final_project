@@ -117,7 +117,9 @@ metadata <-
            Patient_ID == "207CO"|
            Patient_ID == "056CO"|
            Patient_ID == "177I") %>% 
-  mutate(Cell_Barcode = str_replace_all(Cell_Barcode,"(.+_)(.+)","\\2"))
+  mutate(Cell_Barcode = str_replace_all(Cell_Barcode,
+                                        "(.+_)(.+)",
+                                        "\\2"))
 
 
 # Join metadata and patient data------------------------------------------------
