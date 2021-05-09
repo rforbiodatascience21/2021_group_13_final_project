@@ -1,26 +1,22 @@
-# Clear workspace ---------------------------------------------------------
+# Clear workspace --------------------------------------------------------------
 rm(list = ls())
 
-### Provided example code here
-
-# Load libraries ----------------------------------------------------------
+# Load libraries ---------------------------------------------------------------
 library(tidyverse)
 
-# tidyseurat is needed (at least for Karl's environment) for conversion of Matrix object to tibble
+# Tidyseurat is needed for conversion of Matrix object to tibble
 library(tidyseurat)
 
-# Define functions --------------------------------------------------------
+# Define functions -------------------------------------------------------------
 source(file = "R/99_project_functions.R")
 
-# Load data ---------------------------------------------------------------
+# Load data --------------------------------------------------------------------
 
-
-# load first patient
+# Patient_1
 patient_1 <- 
   read_rds(file = "Data/_raw/GSM4058963_025I.dgecounts.rds")
 
-
-#---------get gene identifiers from first patient, they are the same for all---------
+# Get gene identifiers from first patient
 Genes <-
   patient_1 %>% 
   pluck("umicount") %>% 
@@ -28,12 +24,11 @@ Genes <-
   pluck("all") %>%   
   pluck("Dimnames") %>% 
   pluck(1) %>% 
-  as.tibble()
+  as_tibble()
 
-write_csv(Genes,file="Data/Genes_1")
+write_csv(Genes,
+          file = "Data/Genes_1")
 rm(Genes)
-
-#-------------------
 
 # downsample in load as we cannot work with such big data on PCs
 
@@ -42,14 +37,12 @@ patient_1 <-
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
-  as.tibble() %>% 
+  as_tibble() %>% 
   select(c(1:2000))
 
+# Repeat operations for remaining subjects -------------------------------------
 
-
-# -----------------------------------------------------------------------
-
-
+# Patient_2                ---------------------------
 patient_2 <- 
   read_rds(file = "Data/_raw/GSM4058907_465C.dgecounts.rds")
 
@@ -60,9 +53,10 @@ Genes <-
   pluck("all") %>%   
   pluck("Dimnames") %>% 
   pluck(1) %>% 
-  as.tibble()
+  as_tibble()
 
-write_csv(Genes,file="Data/Genes_2")
+write_csv(Genes,
+          file = "Data/Genes_2")
 rm(Genes)
 
 patient_2 <- 
@@ -74,10 +68,7 @@ patient_2 <-
   select(c(1:2000))
 
 
-
-
-#-------------------------------------------------------------------------
-
+# Patient_3                ---------------------------
 patient_3 <- 
   read_rds(file = "Data/_raw/GSM4058921_003C.dgecounts.rds")
 
@@ -88,9 +79,10 @@ Genes <-
   pluck("all") %>%   
   pluck("Dimnames") %>% 
   pluck(1) %>% 
-  as.tibble()
+  as_tibble()
 
-write_csv(Genes,file="Data/Genes_3")
+write_csv(Genes,
+          file = "Data/Genes_3")
 rm(Genes)
 
 patient_3 <- 
@@ -102,12 +94,7 @@ patient_3 <-
   select(c(1:2000))
 
 
-
-
-
-#-------------------------------------------------------------------------
-
-
+# Patient_4                ---------------------------
 patient_4 <- 
   read_rds(file = "Data/_raw/GSM4058936_207CO.dgecounts.rds")
 
@@ -118,9 +105,10 @@ Genes <-
   pluck("all") %>%   
   pluck("Dimnames") %>% 
   pluck(1) %>% 
-  as.tibble()
+  as_tibble()
 
-write_csv(Genes,file="Data/Genes_4")
+write_csv(Genes,
+          file = "Data/Genes_4")
 rm(Genes)
 
 patient_4 <- 
@@ -132,11 +120,7 @@ patient_4 <-
   select(c(1:2000))
 
 
-
-
-#-------------------------------------------------------------------------
-
-
+# Patient_5                ---------------------------
 patient_5 <- 
   read_rds(file = "Data/_raw/GSM4058944_056CO.dgecounts.rds")
 
@@ -147,9 +131,10 @@ Genes <-
   pluck("all") %>%   
   pluck("Dimnames") %>% 
   pluck(1) %>% 
-  as.tibble()
+  as_tibble()
 
-write_csv(Genes,file="Data/Genes_5")
+write_csv(Genes,
+          file = "Data/Genes_5")
 rm(Genes)
 
 patient_5 <- 
@@ -161,10 +146,7 @@ patient_5 <-
   select(c(1:2000))
 
 
-
-
-#-------------------------------------------------------------------------
-
+# Patient_6                ---------------------------
 patient_6 <- 
   read_rds(file = "Data/_raw/GSM4058977_177I.dgecounts.rds")
 
@@ -175,9 +157,10 @@ Genes <-
   pluck("all") %>%   
   pluck("Dimnames") %>% 
   pluck(1) %>% 
-  as.tibble()
+  as_tibble()
 
-write_csv(Genes,file="Data/Genes_6")
+write_csv(Genes,
+          file = "Data/Genes_6")
 rm(Genes)
 
 patient_6 <- 
@@ -189,11 +172,10 @@ patient_6 <-
   select(c(1:2000))
 
 
+# join data --------------------------------------------------------------------
 
+# Write data -------------------------------------------------------------------
 
-# join data ------------------------------------------------------------
-
-# Write data --------------------------------------------------------------
 # Write each downsampled patient into zipped csv
 # Patient_1
 write.csv(patient_1,
@@ -220,5 +202,5 @@ write.csv(patient_6,
           file = "Data/01_patient_6I.csv.gz")
 
 # Remove Data -------------------------------------------------------------
-rm(patient_1,patient_2,patient_3,patient_4,patient_5,patient_6)
+rm(patient_1, patient_2, patient_3, patient_4, patient_5, patient_6)
 
