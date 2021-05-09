@@ -126,7 +126,7 @@ ciliated_IPF <-
   data %>% 
   filter(Subclass_Cell_Identity=="Ciliated") %>% 
   pivot_longer(
-    cols = 8:ncol(data),
+    cols = 9:ncol(data),
     names_to = "Gene",
     values_to = "Counts"
   ) %>% 
@@ -142,7 +142,7 @@ ciliated_IPF <-
   ungroup()
   
 
-# now delete data as its not needed AND there is a column in the nested dataframes called data
+# now delete data as its not needed (memory) AND there is a column in the nested dataframes called data
 
 rm(data)
 
