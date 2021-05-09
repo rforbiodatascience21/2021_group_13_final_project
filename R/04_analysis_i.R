@@ -6,6 +6,7 @@
 library("tidyverse")
 library("viridis")
 library("broom")
+library("nnet")
 
 
 # Define functions --------------------------------------------------------
@@ -144,6 +145,50 @@ ciliated_IPF <-
   group_by(Gene) %>% 
   nest() %>% 
   ungroup()
+
+
+COPD_against_IPF <-
+  data %>% 
+  filter(Subclass_Cell_Identity=="Ciliated") %>% 
+  pivot_longer(
+    cols = 9:ncol(data),
+    names_to = "Gene",
+    values_to = "Counts"
+  ) %>% 
+  select(group,Gene,Counts) %>%
+  mutate(
+    Counts=normalise(Counts),
+    group=case_when(
+      group=="COPD"~0,
+      group=="IPF"~1
+    )
+  ) %>% 
+  filter(group != "Control") %>% 
+  group_by(Gene) %>% 
+  nest() %>% 
+  ungroup()
+
+multinomial <-
+  data %>% 
+  filter(Subclass_Cell_Identity=="Ciliated") %>% 
+  pivot_longer(
+    cols = 9:ncol(data),
+    names_to = "Gene",
+    values_to = "Counts"
+  ) %>% 
+  select(group,Gene,Counts) %>%
+  mutate(
+    Counts=normalise(Counts),
+    group=case_when(
+      group=="Control"~0,
+      group=="COPD"~1,
+      group=="IPF"~2
+    )
+  ) %>% 
+  group_by(Gene) %>% 
+  nest() %>% 
+  ungroup()
+
   
 
 # now delete data as its not needed (memory) AND there is a column in the nested dataframes called data
@@ -163,10 +208,22 @@ COPD_model <-
                   conf.int=TRUE)) %>% 
   unnest(tidy) %>% 
   filter(term!="(Intercept)") %>% 
+  mutate(adj_p.value=
+           p.adjust(
+             p.value,
+             method="bonferroni"
+           )) %>% 
   mutate(identified_as=
            case_when(
              p.value<0.05~"significant",
+             TRUE~"unsignificant")) %>% 
+  mutate(adj_identified_as=
+           case_when(
+             adj_p.value<0.05~"significant",
              TRUE~"unsignificant"))
+
+# wihout correction 2,042 "significant"
+# with bonferroni/holm/fdr correction: 0
 
 IPF_model <-
   ciliated_IPF %>% 
@@ -179,11 +236,85 @@ IPF_model <-
                   conf.int=TRUE)) %>%
   unnest(tidy) %>% 
   filter(term!="(Intercept)") %>% 
+  mutate(adj_p.value=
+           p.adjust(
+             p.value,
+             method="bonferroni"
+           )) %>% 
+  mutate(adj_identified_as=case_when(
+    p.value<0.05~"significant",
+    TRUE~"unsignificant")) %>% 
+  mutate(adj_identified_as=
+           case_when(
+             adj_p.value<0.05~"significant",
+             TRUE~"unsignificant"))
+
+COPD_against_IPF_model <-
+  COPD_against_IPF %>% 
+  mutate(mdl=map(data,
+                 ~glm(group~Counts,
+                      data=.x,
+                      family=binomial(link="logit"))),
+         tidy=map(mdl,
+                  tidy,
+                  conf.int=TRUE)) %>%
+  unnest(tidy) %>% 
+  filter(term!="(Intercept)") %>% 
+  mutate(adj_p.value=
+           p.adjust(
+             p.value,
+             method="bonferroni"
+           )) %>% 
   mutate(identified_as=case_when(
     p.value<0.05~"significant",
-    TRUE~"unsignificant"))
+    TRUE~"unsignificant")) %>% 
+  mutate(adj_identified_as=
+           case_when(
+             adj_p.value<0.05~"significant",
+             TRUE~"unsignificant"))
 
 
+multinomial_model <-  
+  multinomial %>% 
+  mutate(mdl=map(data,
+                 ~multinom(group~Counts,
+                      data=.x)),
+         tidy=map(mdl,
+                  tidy,
+                  conf.int=TRUE)) %>%
+  unnest(tidy) %>% 
+  filter(term!="(Intercept)") %>% 
+  mutate(adj_p.value=
+           p.adjust(
+             p.value,
+             method="bonferroni"
+           )) %>% 
+  mutate(identified_as=case_when(
+    p.value<0.05~"significant",
+    TRUE~"unsignificant")) %>% 
+  mutate(adj_identified_as=
+           case_when(
+             adj_p.value<0.05~"significant",
+             TRUE~"unsignificant"))
+
+p_without_correction <-
+  bind_rows(
+    COPD_model %>% 
+      filter(p.value),
+    IPF_model %>% 
+      filter(p.value),
+    COPD_against_IPF_model %>% 
+      filter(p.value),
+    multinomial_model %>% 
+      filter(p.value),
+  )
+
+#significant_genes_COPD <-
+  multinomial_model %>% 
+  ggplot(aes(x=identified_as)) +
+  geom_bar()
+  
+  
   
 # Save Plots --------------------------------------------------------------
 
