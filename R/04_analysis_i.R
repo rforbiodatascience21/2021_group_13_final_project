@@ -96,7 +96,7 @@ cells_type_per_group <-
   
 normalised <-
   data %>% 
-  select(8:ncol(.)) %>% 
+  select(9:ncol(.)) %>% 
   map(normalise)
   
   
