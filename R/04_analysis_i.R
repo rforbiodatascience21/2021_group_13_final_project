@@ -7,7 +7,7 @@ library("tidyverse")
 library("viridis")
 library("broom")
 library("nnet")
-
+library("patchwork")
 
 # Define functions --------------------------------------------------------
 source(file = "R/99_project_functions.R")
@@ -90,17 +90,9 @@ cells_type_per_group <-
   
 # Take only ciliated cells,
 # pivot longer to get genes as rows for modelling
-# normalise the Counts, !!!!!WE NEED TO DO THAT BEFORE!!!! because I think otherwise it will be normalised according to all levels, not the specific cells one
-
+# normalise the Counts
   
-# Proposed solution, cant run this now
-  
-normalised <-
-  data %>% 
-  select(9:ncol(.)) %>% 
-  map(normalise)
-  
-  
+## make datasets for models  
   
 ciliated_COPD <-
     data %>% 
@@ -141,7 +133,7 @@ ciliated_IPF <-
       group=="IPF"~1
     )
   ) %>% 
-  filter(group != "IPF") %>% 
+  filter(group != "COPD") %>% 
   group_by(Gene) %>% 
   nest() %>% 
   ungroup()
@@ -195,7 +187,7 @@ multinomial <-
 
 rm(data)
 
-# make two models
+# make four models
 
 COPD_model <-
   ciliated_COPD %>% 
@@ -241,7 +233,8 @@ IPF_model <-
              p.value,
              method="bonferroni"
            )) %>% 
-  mutate(adj_identified_as=case_when(
+  mutate(identified_as=
+           case_when(
     p.value<0.05~"significant",
     TRUE~"unsignificant")) %>% 
   mutate(adj_identified_as=
@@ -265,7 +258,8 @@ COPD_against_IPF_model <-
              p.value,
              method="bonferroni"
            )) %>% 
-  mutate(identified_as=case_when(
+  mutate(identified_as=
+           case_when(
     p.value<0.05~"significant",
     TRUE~"unsignificant")) %>% 
   mutate(adj_identified_as=
@@ -289,7 +283,8 @@ multinomial_model <-
              p.value,
              method="bonferroni"
            )) %>% 
-  mutate(identified_as=case_when(
+  mutate(identified_as=
+           case_when(
     p.value<0.05~"significant",
     TRUE~"unsignificant")) %>% 
   mutate(adj_identified_as=
@@ -298,21 +293,41 @@ multinomial_model <-
              TRUE~"unsignificant"))
 
 p_without_correction <-
-  bind_rows(
+  c(
     COPD_model %>% 
-      filter(p.value),
+      filter(p.value=="significant") %>% 
+      nrow(),
     IPF_model %>% 
-      filter(p.value),
+      filter(p.value=="significant") %>% 
+      nrow(),
     COPD_against_IPF_model %>% 
-      filter(p.value),
+      filter(p.value=="significant") %>% 
+      nrow(),
     multinomial_model %>% 
-      filter(p.value),
+      filter(p.value=="significant") %>% 
+      nrow()
+  )
+
+p_with_bonferroni_correction <-
+  c(
+    COPD_model %>% 
+      filter(adj_p.value=="significant") %>% 
+      nrow(),
+    IPF_model %>% 
+      filter(adj_p.value=="significant") %>% 
+      nrow(),
+    COPD_against_IPF_model %>% 
+      filter(adj_p.value=="significant") %>% 
+      nrow(),
+    multinomial_model %>% 
+      filter(adj_p.value=="significant") %>% 
+      nrow()
   )
 
 #significant_genes_COPD <-
   multinomial_model %>% 
   ggplot(aes(x=identified_as)) +
-  geom_bar()
+  geom_bar() 
   
   
   
