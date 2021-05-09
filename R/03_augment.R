@@ -169,14 +169,14 @@ mt_selection <- select(data, starts_with("MT"))
 mt_sum <- mt_selection %>% 
   mutate(
     mito_sum=
-      rowSums(mt_selection),
-    .after=Cell_Barcode)
+      rowSums(mt_selection))
 
 data <- data %>%
   mutate(
     select(
       mt_sum,
-      mito_sum))
+      mito_sum),
+    .after=Cell_Barcode)
 
 data <- data %>%
   filter(
