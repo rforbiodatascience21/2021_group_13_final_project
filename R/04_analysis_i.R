@@ -292,43 +292,74 @@ multinomial_model <-
              adj_p.value<0.05~"significant",
              TRUE~"unsignificant"))
 
-p_without_correction <-
+sig_without_correction <-
   c(
     COPD_model %>% 
-      filter(p.value=="significant") %>% 
+      filter(identified_as=="significant") %>% 
       nrow(),
     IPF_model %>% 
-      filter(p.value=="significant") %>% 
+      filter(identified_as=="significant") %>% 
       nrow(),
     COPD_against_IPF_model %>% 
-      filter(p.value=="significant") %>% 
+      filter(identified_as=="significant") %>% 
       nrow(),
     multinomial_model %>% 
-      filter(p.value=="significant") %>% 
+      filter(identified_as=="significant") %>% 
       nrow()
   )
 
-p_with_bonferroni_correction <-
+sig_with_bonferroni_correction <-
   c(
     COPD_model %>% 
-      filter(adj_p.value=="significant") %>% 
+      filter(adj_identified_as=="significant") %>% 
       nrow(),
     IPF_model %>% 
-      filter(adj_p.value=="significant") %>% 
+      filter(adj_identified_as=="significant") %>% 
       nrow(),
     COPD_against_IPF_model %>% 
-      filter(adj_p.value=="significant") %>% 
+      filter(adj_identified_as=="significant") %>% 
       nrow(),
     multinomial_model %>% 
-      filter(adj_p.value=="significant") %>% 
+      filter(adj_identified_as=="significant") %>% 
       nrow()
   )
 
-#significant_genes_COPD <-
-  #multinomial_model %>% 
-  #ggplot(aes(x=identified_as)) +
-  #geom_bar() 
+significant_genes_without_correction <-
+  tibble(p_without_correction) %>% 
+  ggplot() +
+  geom_bar(aes(
+    c("COPD_model","IPF_model","COPD_against_IPF","multinomial_model"),
+    sig_without_correction), 
+    stat="identity",
+    fill = "lightblue") +
+  xlab("Model") +
+  ylab("Count") +
+  theme_gray() +
+  ggtitle("With Boniferri Correction") +
+  scale_y_continuous(expand=c(0,0), limits = c(0, 2200))
   
+significant_genes_with_correction <-
+  tibble(p_with_bonferroni_correction) %>% 
+  ggplot() +
+  geom_bar(aes(
+    c("COPD_model","IPF_model","COPD_against_IPF","multinomial_model"),
+    sig_with_bonferroni_correction), 
+    stat="identity",
+    fill = "red") +
+  xlab("Model") +
+  ylab("Count") +
+  theme_gray() +
+  ggtitle("Without Boniferri Correction") +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 2200))
+  
+the_power_of_boniferri <- 
+  significant_genes_without_correction + 
+  significant_genes_with_correction +
+  plot_annotation(
+    title = "Genes Identified As Significant"
+   # ,subtitle = 
+   # ,caption = 
+  )
   
   
 # Save Plots --------------------------------------------------------------
