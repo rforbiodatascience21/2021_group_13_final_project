@@ -105,7 +105,7 @@ ciliated_COPD <-
     data %>% 
     filter(Subclass_Cell_Identity=="Ciliated") %>% 
     pivot_longer(
-      cols = 8:ncol(data),
+      cols = 9:ncol(data),
       names_to = "Gene",
       values_to = "Counts"
     ) %>% 
