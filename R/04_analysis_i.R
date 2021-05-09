@@ -185,7 +185,7 @@ multinomial <-
 
 # now delete data as its not needed (memory) AND there is a column in the nested dataframes called data
 
-rm(data)
+#rm(data)
 
 # make four models
 
@@ -325,9 +325,9 @@ p_with_bonferroni_correction <-
   )
 
 #significant_genes_COPD <-
-  multinomial_model %>% 
-  ggplot(aes(x=identified_as)) +
-  geom_bar() 
+  #multinomial_model %>% 
+  #ggplot(aes(x=identified_as)) +
+  #geom_bar() 
   
   
   
