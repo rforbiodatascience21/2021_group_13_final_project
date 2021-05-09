@@ -110,10 +110,12 @@ ciliated_COPD <-
       values_to = "Counts"
     ) %>% 
     select(group,Gene,Counts) %>%
-#%>%
-    #sample_n(250) %>% 
     mutate(
-      Counts=normalise(Counts)
+      Counts=normalise(Counts),
+      group=case_when(
+        group=="Control"~0,
+        group=="COPD"~1
+      )
     ) %>% 
   filter(group != "IPF") %>% 
   group_by(Gene) %>% 
@@ -131,10 +133,12 @@ ciliated_IPF <-
     values_to = "Counts"
   ) %>% 
   select(group,Gene,Counts) %>%
-  #%>%
-  #sample_n(250) %>% 
   mutate(
-    Counts=normalise(Counts)
+    Counts=normalise(Counts),
+    group=case_when(
+      group=="Control"~0,
+      group=="IPF"~1
+    )
   ) %>% 
   filter(group != "IPF") %>% 
   group_by(Gene) %>% 
@@ -156,7 +160,13 @@ COPD_model <-
                       family=binomial(link="logit"))),
          tidy=map(mdl,
                   tidy,
-                  conf.int=TRUE))
+                  conf.int=TRUE)) %>% 
+  unnest(tidy) %>% 
+  filter(term!="(Intercept)") %>% 
+  mutate(identified_as=
+           case_when(
+             p.value<0.05~"significant",
+             TRUE~"unsignificant"))
 
 IPF_model <-
   ciliated_IPF %>% 
@@ -166,7 +176,14 @@ IPF_model <-
                       family=binomial(link="logit"))),
          tidy=map(mdl,
                   tidy,
-                  conf.int=TRUE))
+                  conf.int=TRUE)) %>%
+  unnest(tidy) %>% 
+  filter(term!="(Intercept)") %>% 
+  mutate(identified_as=case_when(
+    p.value<0.05~"significant",
+    TRUE~"unsignificant"))
+
+
   
 # Save Plots --------------------------------------------------------------
 
