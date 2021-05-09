@@ -176,9 +176,7 @@ data <- data %>%
     select(
       mt_sum,
       mito_sum),
-    .after=Cell_Barcode)
-
-data <- data %>%
+    .after=Cell_Barcode)%>%
   filter(
     mito_sum/
            nUMI<0.2)
