@@ -12,6 +12,7 @@ library("shinythemes")
 source(file = "R/99_project_functions.R")
 
 # Load data --------------------------------------------------------------------
+
 data <- read_csv("Data/03_data.csv")
 
 gois <- read_csv("Data/_raw/disease_genes.csv")
