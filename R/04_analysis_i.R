@@ -333,7 +333,7 @@ sig_with_bonferroni_correction <-
   )
 
 significant_genes_without_correction <-
-  tibble(p_without_correction) %>% 
+  tibble(sig_without_correction) %>% 
   ggplot() +
   geom_bar(aes(
     c("COPD_model",
@@ -350,7 +350,7 @@ significant_genes_without_correction <-
   scale_y_continuous(expand = c(0,0), limits = c(0, 2200))
   
 significant_genes_with_correction <-
-  tibble(p_with_bonferroni_correction) %>% 
+  tibble(sig_with_bonferroni_correction) %>% 
   ggplot() +
   geom_bar(aes(
     c("COPD_model",
