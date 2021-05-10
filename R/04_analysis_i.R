@@ -387,7 +387,8 @@ ggsave("Data/04_i_the_power_of_boniferri.png",
 
 # Remove Data -------------------------------------------------------------
 
-rm(cells_count_plot,
+rm(ciliated,
+   cells_count_plot,
    cells_type_plot,
    plot_epithelial_subtypes,
    the_power_of_boniferri,
