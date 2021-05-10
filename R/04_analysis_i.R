@@ -159,8 +159,9 @@ ciliated_COPD <-
            Counts) %>%
     mutate(Counts = normalise(Counts),
            group = case_when(group == "Control" ~ 0,
-                             group == "COPD" ~ 1)) %>% 
-  filter(group != "IPF") %>% 
+                             group == "COPD" ~ 1,
+                             TRUE ~ 999)) %>% 
+  filter(group != 999) %>% 
   group_by(Gene) %>% 
   nest() %>% 
   ungroup()
@@ -177,8 +178,9 @@ ciliated_IPF <-
          Counts) %>%
   mutate(Counts = normalise(Counts),
          group = case_when(group == "Control" ~ 0,
-                           group == "IPF" ~ 1)) %>% 
-  filter(group != "COPD") %>% 
+                           group == "IPF" ~ 1,
+                           TRUE ~ 999)) %>% 
+  filter(group != 999) %>% 
   group_by(Gene) %>% 
   nest() %>% 
   ungroup()
@@ -194,8 +196,9 @@ COPD_against_IPF <-
          Counts) %>%
   mutate(Counts = normalise(Counts),
          group = case_when(group == "COPD" ~ 0,
-                           group == "IPF" ~ 1)) %>% 
-  filter(group != "Control") %>% 
+                           group == "IPF" ~ 1,
+                           TRUE ~ 999)) %>% 
+  filter(group != 999) %>% 
   group_by(Gene) %>% 
   nest() %>% 
   ungroup()
