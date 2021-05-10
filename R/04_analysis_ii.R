@@ -16,9 +16,7 @@ data <- read_csv("Data/03_data.csv")
 
 gois <- read_csv("Data/_raw/disease_genes.csv")
 
-
 # Wrangling --------------------------------------------------------------------
-
 ciliated <- data %>% 
   filter(Subclass_Cell_Identity == "Ciliated") %>% 
   pivot_longer(cols = TSPAN6:ncol(data),
@@ -27,11 +25,10 @@ ciliated <- data %>%
 
 ciliated_gois <- right_join(ciliated,
                             gois, 
-                            by=c("gene")) 
+                            by = c("gene")) 
 
 
 # Preparing the COPD model vs Control
-
 ciliated_COPD <- ciliated_gois %>% 
   select(group,
          gene,
@@ -68,7 +65,6 @@ COPD_model <- ciliated_COPD %>%
 
 
 # Preparing the IPF model vs Control -------------------------------------------
-
 ciliated_IPF <- ciliated_gois %>% 
   select(group,
          gene,
@@ -102,49 +98,50 @@ IPF_model <- ciliated_IPF %>%
 
 
 # Clustering, dendrograms and heatmaps -----------------------------------------
-
 # k-means
-
 cluster_data <- ciliated_gois %>% 
-  pivot_wider(
-    names_from = gene,
-    values_from = Counts
-  ) %>% 
-  select(c("group",CP:AFP)) %>% 
+  pivot_wider(names_from = gene,
+              values_from = Counts) %>% 
+  select(c("group",
+           CP:AFP)) %>% 
   mutate(across(everything(),
-                ~replace_na(.x,0)))
+                ~replace_na(.x,
+                            0)))
 
-data_to_cluster <-
-  cluster_data %>% 
+data_to_cluster <- cluster_data %>% 
   select(-group)
 
-kclusts <- 
-  tibble(k = 1:20) %>%
-  mutate(
-    kclust = map(k, ~kmeans(data_to_cluster, .x)),
-    tidied = map(kclust, tidy),
-    glanced = map(kclust, glance),
-    augmented = map(kclust, augment, cluster_data)
-  )
+kclusts <- tibble(k = 1:20) %>%
+  mutate(kclust = map(k,
+                      ~kmeans(data_to_cluster,
+                              .x)),
+    tidied = map(kclust,
+                 tidy),
+    glanced = map(kclust,
+                  glance),
+    augmented = map(kclust,
+                    augment,
+                    cluster_data))
 
 glanced <- kclusts %>%
   unnest(cols = glanced)
 
 plot_k_clusters <- ggplot(glanced, 
-                          aes(k, tot.withinss)) +
+                          aes(k,
+                              tot.withinss)) +
   geom_line() +
   geom_point() +
-  scale_x_discrete(breaks=1:20,
-                   limits=1:20) +
+  scale_x_discrete(breaks = 1:20,
+                   limits = 1:20) +
   ylab("Total Within Sum of Squares") +
   xlab("Number of Clusters") +
   ggplot(glanced,
          aes(k,
-             (betweenss/totss))) +
+             (betweenss / totss))) +
   geom_line() +
   geom_point() +
-  scale_x_discrete(breaks=1:20,
-                    limits=1:20) +
+  scale_x_discrete(breaks = 1:20,
+                    limits = 1:20) +
   ylim(0:1) +
   ylab("Between/Tot Sum of Sq.") +
   xlab("Number of Clusters") +
@@ -152,14 +149,12 @@ plot_k_clusters <- ggplot(glanced,
                     "Evaluation of K-means with Different Number of Centroids")
 
 
-### shiny ----------------------------------------------------------------------
+# shiny ------------------------------------------------------------------------
 
 significant_identification <- function(dataset,p){
-  dataset <-
-    dataset %>% 
-    mutate(identified_as = 
-             case_when(p.value<p~"significant",
-                       TRUE~"unsignificant"))
+  dataset <- dataset %>% 
+    mutate(identified_as = case_when(p.value < p ~ "significant",
+                                     TRUE ~ "unsignificant"))
 }
 
 manhatten_plot <- function(dataset,p){
@@ -167,67 +162,59 @@ manhatten_plot <- function(dataset,p){
     mutate(gene = fct_reorder(as.factor(gene),
                               p.value,
                               .desc = TRUE)) %>% 
-    ggplot(aes(gene,
-               p.value,
+    ggplot(aes(x = gene,
+               y = p.value,
                colour = identified_as)) + 
     geom_point(size = 2) + 
     geom_hline(yintercept = p,
                linetype = "dashed") + 
-    labs(x="Gene",
-         y="p-value") +
+    labs(x = "Gene",
+         y = "p-value") +
     theme(legend.position = "bottom",
-          axis.text.x = element_text(angle=45,
-                                     size=3))
+          axis.text.x = element_text(angle = 45,
+                                     size = 3))
 }
 
 filter_sig_genes <- function(dataset){
-  data <-
-    dataset %>% 
-    filter(identified_as=="significant") %>% 
-    select("gene","p.value") %>% 
+  data <- dataset %>% 
+    filter(identified_as == "significant") %>% 
+    select("gene",
+           "p.value") %>% 
     mutate(p.value = as.character(p.value))
   return(data)
-  
-  
 }
 
 count_sig_genes <- function(dataset){
-  data <-
-    dataset %>% 
-    filter(identified_as=="significant") %>% 
-    select("gene","p.value") %>% 
+  data <- dataset %>% 
+    filter(identified_as == "significant") %>% 
+    select("gene",
+           "p.value") %>% 
     mutate(p.value = as.character(p.value))%>% 
     count()
   return(data)
-  
-  
 }
 
 ui <- fluidPage(
   theme = shinytheme("cyborg"),
-  fluidRow(
-    selectInput(
-      "selected_data",
-      label = "Select Model",
-      choice = c("IPF_vs_Control","COPD_vs_Control"),
-    )
-  ),
-  fluidRow(
-    column(8,
-           sliderInput("p","p-value",1e-3,0.1,value=0.05,step=0.01)
-    ),
+  fluidRow(selectInput("selected_data",
+                       label = "Select Model",
+                       choice = c("IPF_vs_Control",
+                                  "COPD_vs_Control"),
+                       )),
+  fluidRow(column(8,
+                  sliderInput("p",
+                              "p-value",
+                              1e-3,
+                              0.1,
+                              value = 0.05,
+                              step = 0.01)),
     column(4,
-           checkboxInput("bon","Bonferroni Correction")
-    )
-  ),
-  fluidRow(
-    plotOutput("plot"),
-    h3("Genes Identified as Significant:"),
-    tableOutput("sig_genes"),
-    
-    
-  )
-)
+           checkboxInput("bon",
+                         "Bonferroni Correction"))),
+  fluidRow(plotOutput("plot"),
+           h3("Genes Identified as Significant:"),
+           tableOutput("sig_genes"),
+           ))
 
 server <- function(input,output,session){
   
@@ -235,26 +222,31 @@ server <- function(input,output,session){
     {input$p
       input$bon
       input$selected_data},{
-        if (input$selected_data=="COPD_vs_Control"){
-          if (input$bon==FALSE){
-            significant_identification(COPD_model,input$p)
+        if (input$selected_data == "COPD_vs_Control"){
+          if (input$bon == FALSE){
+            significant_identification(COPD_model,
+                                       input$p)
           }
           else{
-            significant_identification(COPD_model,input$p/63)
+            significant_identification(COPD_model,
+                                       input$p/63)
           }
         }
         else{
-          if (input$bon==FALSE){
-            significant_identification(IPF_model,input$p)
+          if (input$bon == FALSE){
+            significant_identification(IPF_model,
+                                       input$p)
           }
           else{
-            significant_identification(IPF_model,input$p/63)
+            significant_identification(IPF_model,
+                                       input$p/63)
           }
         }
       }
   )
   
-  output$plot <- renderPlot(manhatten_plot(data(),input$p))
+  output$plot <- renderPlot(manhatten_plot(data(),
+                                           input$p))
   
   output$sig_genes <- renderTable(filter_sig_genes(data()))
   
@@ -265,7 +257,7 @@ shinyApp(ui, server)
 
 
 
-### end shiny ------------------------------------------------------------------
+# end shiny --------------------------------------------------------------------
 
 # dendrograms
 
