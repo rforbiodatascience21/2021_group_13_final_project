@@ -134,10 +134,27 @@ heat_dendro<-heatmaply(sqrt(dendro), Colv = NULL, hclust_method = "average",
           plot_method = "plotly", row_dend_left = TRUE
 ) 
 
-# PCA data preparation
+
+
+# PCA data preparation --- Dead end(sofus)
 prefit <- ciliated_gois %>% 
   pivot_wider(names_from = "gene",
               values_from = "Counts")
+
+prefit_genes <- prefit %>% 
+  select(-mito_sum,
+         -nGene,
+         -nUMI) %>% 
+  select(where(is.numeric))
+
+
+prefit_genes %>% 
+  var(na.rm = FALSE)
+
+
+prefit_genes %>% 
+  select(CP) %>% 
+  var(na.rm = TRUE)
 
 pca_fit <- prefit %>% 
   select(CP:ncol(prefit)) %>% # retain only numeric columns
