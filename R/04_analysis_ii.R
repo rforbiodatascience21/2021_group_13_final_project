@@ -9,6 +9,7 @@ library("shiny")
 library("shinythemes")
 
 # Define functions -------------------------------------------------------------
+
 source(file = "R/99_project_functions.R")
 
 # Load data --------------------------------------------------------------------
@@ -83,6 +84,7 @@ ciliated_IPF <- ciliated_gois %>%
   nest() %>% 
   ungroup()
 
+# Modelling the IPF vs Control 
 
 IPF_model <- ciliated_IPF %>% 
   mutate(mdl = map(data,
@@ -106,6 +108,9 @@ IPF_model <- ciliated_IPF %>%
 
 # k-means
 
+# make data ready for kmeans function
+# take only group and genes
+
 cluster_data <- ciliated_gois %>% 
   pivot_wider(
     names_from = gene,
@@ -115,18 +120,22 @@ cluster_data <- ciliated_gois %>%
   mutate(across(everything(),
                 ~replace_na(.x,0)))
 
+# discard group
+
 data_to_cluster <-
   cluster_data %>% 
   select(-group)
+
+# make 20 kmeans models with glanced column
 
 kclusts <- 
   tibble(k = 1:20) %>%
   mutate(
     kclust = map(k, ~kmeans(data_to_cluster, .x)),
-    tidied = map(kclust, tidy),
     glanced = map(kclust, glance),
-    augmented = map(kclust, augment, cluster_data)
   )
+
+# unnest glanced column and plot
 
 glanced <- kclusts %>%
   unnest(cols = glanced)
