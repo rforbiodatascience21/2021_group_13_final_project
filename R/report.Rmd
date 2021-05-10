@@ -1,6 +1,6 @@
 ---
-title: "report"
-author: "Thanos"
+title: "Presentation"
+author: "s200177, s210136, s202754"
 date: "5/10/2021"
 output: html_document
 ---
@@ -9,27 +9,33 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-01_load
+# 01_load
+```{r libraries, include=FALSE}
+library(tidyverse)
+library(tidyseurat)
+```
+
+```{r functions, include=FALSE}
+source(file = "R/99_project_functions.R")
+```
+
+# 02_clean
+
+```{r}
+
+```
+
+# 03_augement
 
 ```{r}
 ```
 
-02_clean
+# 04_analysis_i
 
 ```{r}
 ```
 
-03_augement
-
-```{r}
-```
-
-04_analysis_i
-
-```{r}
-```
-
-04_analysis_ii
+# 04_analysis_ii
 
 ```{r}
 ```
