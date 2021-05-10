@@ -140,8 +140,9 @@ prefit <- ciliated_gois %>%
               values_from = "Counts")
 
 pca_fit <- prefit %>% 
-  select(CP:ncol(prefit))%>% 
-  prcomp(scale = TRUE)
+  select(CP:ncol(prefit)) %>% # retain only numeric columns
+  scale() %>% # scale data
+  prcomp() # do PCA
 
 
 
