@@ -1,0 +1,41 @@
+---
+title: "report"
+author: "Thanos"
+date: "5/10/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+01_load
+
+```{r}
+```
+
+02_clean
+
+```{r}
+```
+
+03_augement
+
+```{r}
+```
+
+04_analysis_i
+
+```{r}
+```
+
+04_analysis_ii
+
+```{r}
+```
+
+#Whatever
+
+```{r}
+```
+
