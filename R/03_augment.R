@@ -180,10 +180,39 @@ data %>%
 
 # --> no NAs left
 
+#Breaking the complete data set into patient groups
+
+Control <- data%>%
+  filter(Patient_ID !="025I")%>%
+  filter(Patient_ID !="207CO")%>%
+  filter(Patient_ID !="056CO")%>%
+  filter(Patient_ID !="177I")
+
+COPD <- data%>%
+  filter(Patient_ID !="025I")%>%
+  filter(Patient_ID !="465C")%>%
+  filter(Patient_ID !="003C")%>%
+  filter(Patient_ID !="177I")
+
+IPF <- data%>%
+  filter(Patient_ID !="465C")%>%
+  filter(Patient_ID !="207CO")%>%
+  filter(Patient_ID !="056CO")%>%
+  filter(Patient_ID !="003C")
+
 
 # Write data -------------------------------------------------------------------
 write_csv(data, 
           file = "Data/03_data.csv")
+
+write_csv(Control, 
+          file = "Data/03_Control.csv")
+write_csv(COPD, 
+          file = "Data/03_COPD.csv")
+write_csv(IPF, 
+          file = "Data/03_IPF.csv")
+
+
 
 # Remove Data ------------------------------------------------------------------
 rm(data,
