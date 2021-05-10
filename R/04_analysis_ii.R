@@ -9,9 +9,11 @@ library("shiny")
 library("shinythemes")
 
 # Define functions -------------------------------------------------------------
+
 source(file = "R/99_project_functions.R")
 
 # Load data --------------------------------------------------------------------
+
 data <- read_csv("Data/03_data.csv")
 
 gois <- read_csv("Data/_raw/disease_genes.csv")
@@ -78,6 +80,7 @@ ciliated_IPF <- ciliated_gois %>%
   nest() %>% 
   ungroup()
 
+# Modelling the IPF vs Control 
 
 IPF_model <- ciliated_IPF %>% 
   mutate(mdl = map(data,
@@ -99,6 +102,13 @@ IPF_model <- ciliated_IPF %>%
 
 # Clustering, dendrograms and heatmaps -----------------------------------------
 # k-means
+<<<<<<< HEAD
+
+# make data ready for kmeans function
+# take only group and genes
+
+=======
+>>>>>>> f49346f0882b4a71b19c995f784d6d4f034f7e43
 cluster_data <- ciliated_gois %>% 
   pivot_wider(names_from = gene,
               values_from = Counts) %>% 
@@ -108,6 +118,22 @@ cluster_data <- ciliated_gois %>%
                 ~replace_na(.x,
                             0)))
 
+<<<<<<< HEAD
+# discard group
+
+data_to_cluster <-
+  cluster_data %>% 
+  select(-group)
+
+# make 20 kmeans models with glanced column
+
+kclusts <- 
+  tibble(k = 1:20) %>%
+  mutate(
+    kclust = map(k, ~kmeans(data_to_cluster, .x)),
+    glanced = map(kclust, glance),
+  )
+=======
 data_to_cluster <- cluster_data %>% 
   select(-group)
 
@@ -122,6 +148,9 @@ kclusts <- tibble(k = 1:20) %>%
     augmented = map(kclust,
                     augment,
                     cluster_data))
+>>>>>>> f49346f0882b4a71b19c995f784d6d4f034f7e43
+
+# unnest glanced column and plot
 
 glanced <- kclusts %>%
   unnest(cols = glanced)
