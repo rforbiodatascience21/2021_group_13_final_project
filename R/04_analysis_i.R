@@ -157,6 +157,7 @@ ciliated_COPD <-
     select(group,
            Gene,
            Counts) %>%
+  filter(!is.na(Counts)) %>% 
     mutate(Counts = normalise(Counts),
            group = case_when(group == "Control" ~ 0,
                              group == "COPD" ~ 1,
@@ -176,6 +177,7 @@ ciliated_IPF <-
   select(group,
          Gene,
          Counts) %>%
+  filter(!is.na(Counts)) %>% 
   mutate(Counts = normalise(Counts),
          group = case_when(group == "Control" ~ 0,
                            group == "IPF" ~ 1,
@@ -194,6 +196,7 @@ COPD_against_IPF <-
   select(group,
          Gene,
          Counts) %>%
+  filter(!is.na(Counts)) %>% 
   mutate(Counts = normalise(Counts),
          group = case_when(group == "COPD" ~ 0,
                            group == "IPF" ~ 1,
@@ -211,6 +214,7 @@ multinomial <-
   select(group,
          Gene,
          Counts) %>%
+  filter(!is.na(Counts)) %>% 
   mutate(Counts = normalise(Counts),
          group = case_when(group == "Control" ~ 0,
                            group == "COPD" ~ 1,
