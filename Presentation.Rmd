@@ -16,8 +16,17 @@ source(file = "R/99_project_functions.R")
 ```
 
 ```{r libraries, include=FALSE}
-library(tidyverse)
-library(tidyseurat)
+library("tidyverse")
+library("tidyseurat")
+library("viridis")
+library("broom")
+library("nnet")
+library("patchwork")
+library("dendextend")
+library("heatmapply")
+library("ggdendro")
+library("shiny")
+library("shinythemes")
 ```
 
 # Loading data of all patients ------------------------------------------------
@@ -610,16 +619,6 @@ rm(data,
    mt_sum)
 ```
 
-
-
-## Load libraries for analysis i ----------------------------------------------
-```{r}
-library("tidyverse")
-library("viridis")
-library("broom")
-library("nnet")
-library("patchwork")
-```
 
 ## Load data ------------------------------------------------------------------
 ```{r}
