@@ -345,7 +345,7 @@ IPF_clusterplot <- ggplot() +
 
 #A non-tidyverse compatible clustering method - NOT USED
 
-d <- dist(sqrt(dendroIPF))       
+d <- dist(sqrt(dendroIPF))     # change to dendroCOPD if wanted  
  
 dend_row <- d %>% 
   hclust(method = "average") %>% 
