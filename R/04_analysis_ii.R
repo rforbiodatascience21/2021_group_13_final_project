@@ -4,6 +4,8 @@ library("viridis")
 library("broom")
 library("nnet")
 library("patchwork")
+library("dendextend")
+library("heatmapply")
 
 
 # Define functions -------------------------------------------------------------
@@ -80,6 +82,7 @@ dend_row %>% highlight_branches %>% plot
 dend_k <- find_k(dend_row)
 
 plot(dend_k)
+
 
 heatmaply(sqrt(dendro), Colv = NULL, hclust_method = "average", 
           fontsize_row = 8,fontsize_col = 6,
