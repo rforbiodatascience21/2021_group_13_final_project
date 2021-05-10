@@ -1,9 +1,6 @@
 # Load libraries ---------------------------------------------------------------
 library("tidyverse")
-library("viridis")
 library("broom")
-library("nnet")
-library("patchwork")
 library("dendextend")
 library("heatmapply")
 
@@ -13,43 +10,43 @@ source(file = "R/99_project_functions.R")
 
 
 # Load data --------------------------------------------------------------------
-data <-
-  read_csv("Data/03_data.csv")
+data <- read_csv("Data/03_data.csv")
 
 
-gois <-
-  read_csv("Data/_raw/disease_genes.csv")
+gois <- read_csv("Data/_raw/disease_genes.csv")
 
 
 #Wrangling
 
-
-ciliated <-data %>% 
-  filter(Subclass_Cell_Identity == "Ciliated")%>% 
+ciliated <- data %>% 
+  filter(Subclass_Cell_Identity == "Ciliated") %>% 
   pivot_longer(cols = TSPAN6:ncol(data),
                names_to = "gene",
                values_to = "Counts")
 
-ciliated_gois<-right_join(ciliated, gois, by=c("gene")) 
+ciliated_gois <- right_join(ciliated,
+                            gois, 
+                            by=c("gene")) 
 
 
 #Preparing the COPD model vs Control
-ciliated_COPD<- ciliated_gois%>% 
+
+ciliated_COPD <- ciliated_gois %>% 
   select(group,
          gene,
          Counts) %>%
   filter(!is.na(Counts)) %>% 
+  filter(group != "IPF") %>% 
   mutate(Counts = normalise(Counts),
          group = case_when(group == "Control" ~ 0,
                            group == "COPD" ~ 1)) %>% 
-  filter(group != "IPF") %>% 
   group_by(gene) %>% 
   nest() %>% 
   ungroup()
 
 #Modelling the COPD vs Control 
-COPD_model <-
-  ciliated_COPD %>% 
+
+COPD_model <- ciliated_COPD %>% 
   mutate(mdl = map(data,
                    ~glm(group ~ Counts,
                         data = .x,
@@ -59,7 +56,7 @@ COPD_model <-
                     conf.int = TRUE)) %>% 
   unnest(tidy) %>% 
   filter(term != "(Intercept)") %>% 
-  mutate(adj_p.value=
+  mutate(adj_p.value = 
            p.adjust(p.value,
                     method="bonferroni")) %>% 
   mutate(identified_as = case_when(p.value < 0.05 ~ "significant",
@@ -67,11 +64,9 @@ COPD_model <-
   mutate(adj_identified_as = case_when(adj_p.value < 0.05 ~ "significant",
                                        TRUE ~ "unsignificant"))
 
+#Preparing the IPF model vs Control
 
-
-#Preparing the IPF vs COPD model
-
-ciliated_IPF<- ciliated_gois%>% 
+ciliated_IPF <- ciliated_gois %>% 
   select(group,
          gene,
          Counts) %>%
@@ -84,7 +79,7 @@ ciliated_IPF<- ciliated_gois%>%
   nest() %>% 
   ungroup()
 
-#Modelling the COPD vs Control 
+
 IPF_model <-
   ciliated_IPF %>% 
   mutate(mdl = map(data,
@@ -96,8 +91,7 @@ IPF_model <-
                     conf.int = TRUE)) %>% 
   unnest(tidy) %>% 
   filter(term != "(Intercept)") %>% 
-  mutate(adj_p.value=
-           p.adjust(p.value,
+  mutate(adj_p.value = p.adjust(p.value,
                     method="bonferroni")) %>% 
   mutate(identified_as = case_when(p.value < 0.05 ~ "significant",
                                    TRUE ~ "unsignificant")) %>% 
@@ -109,34 +103,47 @@ IPF_model <-
 
 #Clustering, dendrograms and heatmaps
 
-dendro <- COPD_model%>%
-  select(gene,p.value)%>%
+dendro <- COPD_model %>%
+  select(gene,p.value) %>%
   filter(!is.na(p.value))
-dendro<-column_to_rownames(dendro, var = "gene")
 
-d<-dist(sqrt(dendro))       
+dendro <- column_to_rownames(dendro,
+                           var = "gene")
+
+d <- dist(sqrt(dendro))       
  
-dend_row <- d %>% hclust(method = "average") %>% as.dendrogram 
-dendro_plot<-dend_row %>% highlight_branches %>% plot
+dend_row <- d %>% 
+  hclust(method = "average") %>% 
+  as.dendrogram 
+
+dendro_plot <- dend_row %>% 
+  highlight_branches %>% 
+  plot
 
 
 
 dend_k <- find_k(dend_row)
 
-n_clusters<- plot(dend_k)
+n_clusters <- plot(dend_k)
 
 
 #Plotting the relationship of genes by significance
-heat_dendro<-heatmaply(sqrt(dendro), Colv = NULL, hclust_method = "average", 
-          fontsize_row = 8,fontsize_col = 6,
-          k_row = NA, margins = c(60,50, 70,90),
-          xlab = "p value", ylab = "genes", main = "Clustering of gene expression by statistical significance",
-          plot_method = "plotly", row_dend_left = TRUE
-) 
 
+heat_dendro <- heatmaply(sqrt(dendro),
+                         Colv = NULL, 
+                         hclust_method = "average", 
+                         fontsize_row = 8,fontsize_col = 6,
+                         k_row = NA, margins = c(60,50, 70,90),
+                         xlab = "p value", 
+                         ylab = "genes", 
+                         main = "Clustering of gene expression by statistical significance",
+                         plot_method = "plotly", 
+                         row_dend_left = TRUE
+)
 
 
 # PCA data preparation --- Dead end(sofus)
+
 prefit <- ciliated_gois %>% 
   pivot_wider(names_from = "gene",
               values_from = "Counts")
