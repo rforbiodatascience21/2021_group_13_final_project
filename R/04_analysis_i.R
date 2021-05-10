@@ -351,7 +351,7 @@ the_power_of_boniferri <- significant_genes_without_correction +
   plot_annotation(title = "Genes Identified As Significant")
 
 
-# Save Plots --------------------------------------------------------------
+# Save Plots -------------------------------------------------------------------
 ggsave("Data/04_i_cells_count_plot.png", 
         plot = cells_count_plot)
 ggsave("Data/04_i_cells_type_plot.png",
@@ -362,7 +362,7 @@ ggsave("Data/04_i_the_power_of_boniferri.png",
         plot = the_power_of_boniferri)
 
 
-# Remove Data -------------------------------------------------------------
+# Remove Data ------------------------------------------------------------------
 rm(ciliated,
    cells_count_plot,
    cells_type_plot,
