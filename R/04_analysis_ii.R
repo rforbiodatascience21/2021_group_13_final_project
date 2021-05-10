@@ -94,38 +94,76 @@ IPF_model <- ciliated_IPF %>%
 
 
 # Clustering, dendrograms and heatmaps -----------------------------------------
-dendro <- COPD_model %>%
-  select(gene,
-         p.value) %>%
+#COPD model
+
+dendroCOPD <- COPD_model %>%
+  select(gene,p.value) %>%
   filter(!is.na(p.value))
 
-dendro <- column_to_rownames(dendro,
-                             var = "gene")
+dendroCOPD <- column_to_rownames(dendroCOPD,
+                                 var = "gene")
 
-hc <- hclust(dist(dendro),
-             "ave")
 
-hcdata <- dendro_data(hc,
-                      type = "rectangle")
-ggplot() +
-  geom_segment(data = segment(hcdata), 
+hcCOPD<- hclust(dist(dendroCOPD), 
+                "ave")
+
+COPD_clusters <- dendro_data(hcCOPD,
+                             type = "rectangle")
+
+COPD_clusterplot<-ggplot() +
+  geom_segment(data = segment(COPD_clusters), 
                aes(x = x,
-                   y = y,
-                   xend = xend,
+                   y = y, 
+                   xend = xend, 
                    yend = yend)) +
-  geom_text(data = label(hcdata), 
+  geom_text(data = label(COPD_clusters), 
             aes(x = x,
-                y = y,
+                y = y, 
                 label = label,
                 hjust = 0), 
             size = 3) +
+  xlab("genes") +
+  ylab("distance") +
+  labs(title = "COPD vs Control clustering by significance") +
   coord_flip() +
-  scale_y_reverse(expand = c(0.2,
-                             0))
+  scale_y_reverse(expand = c(0.2, 
+                             0)) + 
+  theme_minimal()
 
-ggdendrogram(hc)
 
-ggdendrogram(hc, rotate = TRUE)
+#IPF model
+dendroIPF <- IPF_model %>%
+  select(gene,p.value) %>%
+  filter(!is.na(p.value))
+
+dendroIPF <- column_to_rownames(dendroIPF,
+                                var = "gene")
+
+hcIPF<- hclust(dist(dendroIPF),
+               "ave")
+
+IPF_clusters <- dendro_data(hcIPF, 
+                            type = "rectangle")
+
+IPF_clusterplot<-ggplot() +
+  geom_segment(data = segment(hcdata), 
+               aes(x = x, 
+                   y = y, 
+                   xend = xend, 
+                   yend = yend)) +
+  geom_text(data = label(hcdata), 
+            aes(x = x,
+                y = y, 
+                label = label,
+                hjust = 0), 
+            size = 3) +
+  xlab("genes") +
+  ylab("distance") +
+  labs(title = "IPF vs Control clustering by significance") +
+  coord_flip() +
+  scale_y_reverse(expand = c(0.2, 
+                             0)) + 
+  theme_minimal()
 
 
 #A non-tidyverse compatible clustering method - NOT USED
