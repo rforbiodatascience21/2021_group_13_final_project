@@ -11,14 +11,11 @@ library(tidyseurat)
 source(file = "R/99_project_functions.R")
 
 # Load data --------------------------------------------------------------------
-
 # Patient_1
-patient_1 <- 
-  read_rds(file = "Data/_raw/GSM4058963_025I.dgecounts.rds")
+patient_1 <- read_rds(file = "Data/_raw/GSM4058963_025I.dgecounts.rds")
 
 # Get gene identifiers from first patient
-Genes <-
-  patient_1 %>% 
+Genes <- patient_1 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>%   
@@ -30,24 +27,21 @@ write_csv(Genes,
           file = "Data/Genes_1")
 rm(Genes)
 
-# downsample in load as we cannot work with such big data on PCs
 
-patient_1 <- 
-  patient_1 %>% 
+# downsample in load as we cannot work with such big data on PCs
+patient_1 <- patient_1 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
   as_tibble() %>% 
   select(c(1:2000))
 
+
 # Repeat operations for remaining subjects -------------------------------------
-
 # Patient_2                ---------------------------
-patient_2 <- 
-  read_rds(file = "Data/_raw/GSM4058907_465C.dgecounts.rds")
+patient_2 <- read_rds(file = "Data/_raw/GSM4058907_465C.dgecounts.rds")
 
-Genes <-
-  patient_2 %>% 
+Genes <- patient_2 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>%   
@@ -59,8 +53,7 @@ write_csv(Genes,
           file = "Data/Genes_2")
 rm(Genes)
 
-patient_2 <- 
-  patient_2 %>% 
+patient_2 <- patient_2 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
@@ -69,11 +62,9 @@ patient_2 <-
 
 
 # Patient_3                ---------------------------
-patient_3 <- 
-  read_rds(file = "Data/_raw/GSM4058921_003C.dgecounts.rds")
+patient_3 <- read_rds(file = "Data/_raw/GSM4058921_003C.dgecounts.rds")
 
-Genes <-
-  patient_3 %>% 
+Genes <- patient_3 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>%   
@@ -85,8 +76,7 @@ write_csv(Genes,
           file = "Data/Genes_3")
 rm(Genes)
 
-patient_3 <- 
-  patient_3 %>% 
+patient_3 <- patient_3 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
@@ -95,11 +85,9 @@ patient_3 <-
 
 
 # Patient_4                ---------------------------
-patient_4 <- 
-  read_rds(file = "Data/_raw/GSM4058936_207CO.dgecounts.rds")
+patient_4 <- read_rds(file = "Data/_raw/GSM4058936_207CO.dgecounts.rds")
 
-Genes <-
-  patient_4 %>% 
+Genes <- patient_4 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>%   
@@ -111,8 +99,7 @@ write_csv(Genes,
           file = "Data/Genes_4")
 rm(Genes)
 
-patient_4 <- 
-  patient_4 %>% 
+patient_4 <- patient_4 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
@@ -121,11 +108,9 @@ patient_4 <-
 
 
 # Patient_5                ---------------------------
-patient_5 <- 
-  read_rds(file = "Data/_raw/GSM4058944_056CO.dgecounts.rds")
+patient_5 <- read_rds(file = "Data/_raw/GSM4058944_056CO.dgecounts.rds")
 
-Genes <-
-  patient_5 %>% 
+Genes <- patient_5 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>%   
@@ -137,8 +122,7 @@ write_csv(Genes,
           file = "Data/Genes_5")
 rm(Genes)
 
-patient_5 <- 
-  patient_5 %>% 
+patient_5 <- patient_5 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
@@ -147,11 +131,9 @@ patient_5 <-
 
 
 # Patient_6                ---------------------------
-patient_6 <- 
-  read_rds(file = "Data/_raw/GSM4058977_177I.dgecounts.rds")
+patient_6 <- read_rds(file = "Data/_raw/GSM4058977_177I.dgecounts.rds")
 
-Genes <-
-  patient_6 %>% 
+Genes <- patient_6 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>%   
@@ -163,8 +145,7 @@ write_csv(Genes,
           file = "Data/Genes_6")
 rm(Genes)
 
-patient_6 <- 
-  patient_6 %>% 
+patient_6 <- patient_6 %>% 
   pluck("umicount") %>% 
   pluck("exon") %>% 
   pluck("all") %>% 
@@ -200,4 +181,9 @@ write.csv(patient_6,
           file = "Data/01_patient_6I.csv.gz")
 
 # Remove Data -------------------------------------------------------------
-rm(patient_1, patient_2, patient_3, patient_4, patient_5, patient_6)
+rm(patient_1, 
+   patient_2, 
+   patient_3, 
+   patient_4, 
+   patient_5, 
+   patient_6)
