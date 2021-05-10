@@ -32,6 +32,8 @@ ciliated <-data %>%
 
 ciliated_gois<-right_join(ciliated, gois, by=c("gene")) 
 
+
+#Preparing the COPD model vs Control
 ciliated_COPD<- ciliated_gois%>% 
   select(group,
          gene,
@@ -45,7 +47,7 @@ ciliated_COPD<- ciliated_gois%>%
   nest() %>% 
   ungroup()
 
-#Modelling the COPD vs Control
+#Modelling the COPD vs Control 
 COPD_model <-
   ciliated_COPD %>% 
   mutate(mdl = map(data,
@@ -64,6 +66,45 @@ COPD_model <-
                                    TRUE ~ "unsignificant")) %>% 
   mutate(adj_identified_as = case_when(adj_p.value < 0.05 ~ "significant",
                                        TRUE ~ "unsignificant"))
+
+
+
+#Preparing the IPF vs COPD model
+
+ciliated_IPF<- ciliated_gois%>% 
+  select(group,
+         gene,
+         Counts) %>%
+  filter(!is.na(Counts)) %>% 
+  mutate(Counts = normalise(Counts),
+         group = case_when(group == "Control" ~ 0,
+                           group == "IPF" ~ 1)) %>% 
+  filter(group != "COPD") %>% 
+  group_by(gene) %>% 
+  nest() %>% 
+  ungroup()
+
+#Modelling the COPD vs Control 
+IPF_model <-
+  ciliated_IPF %>% 
+  mutate(mdl = map(data,
+                   ~glm(group ~ Counts,
+                        data = .x,
+                        family = binomial(link = "logit"))),
+         tidy = map(mdl,
+                    tidy,
+                    conf.int = TRUE)) %>% 
+  unnest(tidy) %>% 
+  filter(term != "(Intercept)") %>% 
+  mutate(adj_p.value=
+           p.adjust(p.value,
+                    method="bonferroni")) %>% 
+  mutate(identified_as = case_when(p.value < 0.05 ~ "significant",
+                                   TRUE ~ "unsignificant")) %>% 
+  mutate(adj_identified_as = case_when(adj_p.value < 0.05 ~ "significant",
+                                       TRUE ~ "unsignificant"))
+
+
 
 
 #Clustering, dendrograms and heatmaps
