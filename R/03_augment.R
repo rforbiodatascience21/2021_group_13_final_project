@@ -142,12 +142,9 @@ data <-
              case_when(
              str_detect(Patient_ID,"I") ~ "IPF",
              str_detect(Patient_ID,"CO") ~ "COPD",
-             TRUE ~ "Control")
-           ),         
+             TRUE ~ "Control")),         
          .after = Patient_ID,
-         Patient_ID =
-           factor(Patient_ID)
-  )
+         Patient_ID = factor(Patient_ID))
 
 rm(metadata)
 
