@@ -172,8 +172,6 @@ patient_6 <-
   select(c(1:2000))
 
 
-# join data --------------------------------------------------------------------
-
 # Write data -------------------------------------------------------------------
 
 # Write each downsampled patient into zipped csv
@@ -203,4 +201,3 @@ write.csv(patient_6,
 
 # Remove Data -------------------------------------------------------------
 rm(patient_1, patient_2, patient_3, patient_4, patient_5, patient_6)
-
