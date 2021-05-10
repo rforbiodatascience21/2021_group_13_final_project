@@ -151,7 +151,7 @@ ciliated <-
   
 ciliated_COPD <-
     ciliated %>% 
-    pivot_longer(cols = 9:ncol(data),
+    pivot_longer(cols = TSPAN6:ncol(data),
                  names_to = "Gene",
                  values_to = "Counts") %>% 
     select(group,
@@ -169,7 +169,7 @@ ciliated_COPD <-
 # same for IPF
 ciliated_IPF <-
   ciliated %>% 
-  pivot_longer(cols = 9:ncol(data),
+  pivot_longer(cols = TSPAN6:ncol(data),
                names_to = "Gene",
                values_to = "Counts") %>% 
   select(group,
@@ -186,7 +186,7 @@ ciliated_IPF <-
 
 COPD_against_IPF <-
   ciliated %>% 
-  pivot_longer(cols = 9:ncol(data),
+  pivot_longer(cols = TSPAN6:ncol(data),
                names_to = "Gene",
                values_to = "Counts") %>% 
   select(group,
@@ -202,7 +202,7 @@ COPD_against_IPF <-
 
 multinomial <-
   ciliated %>% 
-  pivot_longer(cols = 9:ncol(data),
+  pivot_longer(cols = TSPAN6:ncol(data),
                names_to = "Gene",
                values_to = "Counts") %>% 
   select(group,
