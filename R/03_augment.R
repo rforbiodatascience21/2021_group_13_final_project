@@ -14,8 +14,8 @@ patient_1 <- read_csv(file = "Data/02_patient_1I.csv.gz")
 patient_1 <- patient_1 %>% 
   mutate(Patient_ID = "025I",
          .before = Cell_Barcode) %>% 
-  select(-1) %>% 
-  slice(-1)
+  select(Patient_ID:ncol(patient_1)) %>% 
+  filter(Cell_Barcode != "X1")
 
 # Patient_2                ---------------------------
 patient_2 <- read_csv(file = "Data/02_patient_2C.csv.gz")
@@ -23,8 +23,8 @@ patient_2 <- read_csv(file = "Data/02_patient_2C.csv.gz")
 patient_2 <- patient_2 %>% 
   mutate(Patient_ID = "465C",
          .before = Cell_Barcode) %>% 
-  select(-1) %>% 
-  slice(-1)
+  select(Patient_ID:ncol(patient_2)) %>% 
+  filter(Cell_Barcode != "X1")
 
 # Patient_3                ---------------------------
 patient_3 <- read_csv(file = "Data/02_patient_3C.csv.gz")
@@ -32,8 +32,8 @@ patient_3 <- read_csv(file = "Data/02_patient_3C.csv.gz")
 patient_3 <- patient_3 %>% 
   mutate(Patient_ID = "003C",
          .before = Cell_Barcode) %>% 
-  select(-1) %>% 
-  slice(-1)
+  select(Patient_ID:ncol(patient_3)) %>% 
+  filter(Cell_Barcode != "X1")
 
 # Patient_4                ---------------------------
 patient_4 <- read_csv(file = "Data/02_patient_4CO.csv.gz")
@@ -41,17 +41,17 @@ patient_4 <- read_csv(file = "Data/02_patient_4CO.csv.gz")
 patient_4 <- patient_4 %>% 
   mutate(Patient_ID = "207CO",
          .before = Cell_Barcode) %>% 
-  select(-1) %>% 
-  slice(-1)
+  select(Patient_ID:ncol(patient_4)) %>% 
+  filter(Cell_Barcode != "X1")
 
 # Patient_5                ---------------------------
 patient_5 <- read_csv(file = "Data/02_patient_5CO.csv.gz")
 
 patient_5 <- patient_5 %>% 
   mutate(Patient_ID = "056CO",
-         .before = Cell_Barcode) %>% 
-  select(-1) %>% 
-  slice(-1)
+         .before = Cell_Barcode)%>% 
+  select(Patient_ID:ncol(patient_5)) %>% 
+  filter(Cell_Barcode != "X1")
 
 # Patient_6                ---------------------------
 patient_6 <- read_csv(file = "Data/02_patient_6I.csv.gz")
@@ -59,8 +59,8 @@ patient_6 <- read_csv(file = "Data/02_patient_6I.csv.gz")
 patient_6 <- patient_6 %>% 
   mutate(Patient_ID = "177I",
          .before = Cell_Barcode) %>% 
-  select(-1) %>% 
-  slice(-1)
+  select(Patient_ID:ncol(patient_6)) %>% 
+  filter(Cell_Barcode != "X1")
 
 
 # Combining patients------------------------------------------------------------
