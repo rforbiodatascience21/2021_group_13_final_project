@@ -29,7 +29,7 @@ cells_per_group_and_patient <-
   group_by(group,Patient_ID) %>% 
   summarise(total = n())
 
-#cells_count_plot <- 
+cells_count_plot <- 
   cells_per_group_and_patient %>%
   ggplot(aes(x = group,
              y = total)) +
@@ -42,7 +42,7 @@ cells_per_group_and_patient <-
     title = "Cell Counts per Group and Patient after Filtering")
 
   
-### How many cells are there of each type in each group 0
+### How many cells are there of each type in each group
 sum_per_group <-
     data %>% 
     group_by(group) %>% 
@@ -63,7 +63,7 @@ cells_type_per_group <-
 
 
 ### How are cell types distributed
-# cells_type_plot
+cells_type_plot <-
   cells_type_per_group %>% 
     ggplot(aes(x = group,
                y = cell_count / total_count)) +
@@ -80,16 +80,77 @@ cells_type_per_group <-
           axis.ticks.x = element_blank())
 
 
+
+# plot distribution of epithelial
+ 
+subtypes_epithelial <-
+  data %>% 
+  filter(CellType_Category=="Epithelial") %>%  
+  group_by(group,
+           Subclass_Cell_Identity) %>% 
+  summarise(cell_count = n()) %>% 
+  pivot_wider(names_from = Subclass_Cell_Identity,
+              values_from = cell_count) %>%
+  ungroup() %>% 
+  pivot_longer(2:12,
+               names_to = "CellType_Subclass",
+               values_to = "cell_count") %>% 
+  mutate(
+    cell_count=
+      replace_na(
+      cell_count,
+      0)
+  )
+
+total_subtypes_per_group <-
+  subtypes_epithelial %>% 
+  group_by(group) %>% 
+  summarise(total=
+              sum(cell_count))
+
+subtypes_epithelial <-
+  left_join(
+    subtypes_epithelial,
+    total_subtypes_per_group)
+
+plot_epithelial_subtypes <-
+  subtypes_epithelial %>% 
+    ggplot(aes(x = group,
+               y = cell_count / total)) +
+    geom_col(aes(fill = fct_reorder2(as.factor(CellType_Subclass),
+                                     cell_count,group))) +
+    scale_fill_viridis_d("Type", 
+                         alpha = 0.6) +
+    theme_minimal() +
+    coord_flip() +
+    labs(title = "Distribution of Subtypes of Ciliated Cells") +
+    theme(axis.title.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+
+# remove to save memory
+
+rm(cells_per_group_and_patient,
+   sum_per_group,
+   cells_type_per_group,
+   subtypes_epithelial,
+   total_subtypes_per_group)
+
 ### models ###
-  
+
 # Take only ciliated cells,
 # Pivot longer to get genes as rows for modelling
 # Normalise the Counts
-  
+
 ## make datasets for models  
+
+ciliated <-
+  data %>% 
+  filter(Subclass_Cell_Identity == "Ciliated")
+
+  
 ciliated_COPD <-
-    data %>% 
-    filter(Subclass_Cell_Identity == "Ciliated") %>% 
+    ciliated %>% 
     pivot_longer(cols = 9:ncol(data),
                  names_to = "Gene",
                  values_to = "Counts") %>% 
@@ -107,8 +168,7 @@ ciliated_COPD <-
 
 # same for IPF
 ciliated_IPF <-
-  data %>% 
-  filter(Subclass_Cell_Identity == "Ciliated") %>% 
+  ciliated %>% 
   pivot_longer(cols = 9:ncol(data),
                names_to = "Gene",
                values_to = "Counts") %>% 
@@ -125,8 +185,7 @@ ciliated_IPF <-
 
 
 COPD_against_IPF <-
-  data %>% 
-  filter(Subclass_Cell_Identity == "Ciliated") %>% 
+  ciliated %>% 
   pivot_longer(cols = 9:ncol(data),
                names_to = "Gene",
                values_to = "Counts") %>% 
@@ -142,8 +201,7 @@ COPD_against_IPF <-
   ungroup()
 
 multinomial <-
-  data %>% 
-  filter(Subclass_Cell_Identity == "Ciliated") %>% 
+  ciliated %>% 
   pivot_longer(cols = 9:ncol(data),
                names_to = "Gene",
                values_to = "Counts") %>% 
@@ -160,7 +218,7 @@ multinomial <-
 
 
 # now delete data as its not needed (memory) AND there is a column in the nested dataframes called data
-#rm(data)
+rm(data)
 
 # make four models
 COPD_model <-
@@ -317,6 +375,32 @@ the_power_of_boniferri <-
 
 # Save Plots --------------------------------------------------------------
 
+ggsave("Data/04_i_cells_count_plot.png", 
+        plot = cells_count_plot)
+ggsave("Data/04_i_cells_type_plot.png",
+        plot = cells_type_plot)
+ggsave("Data/04_i_plot_epithelial_subtypes.png",
+        plot = plot_epithelial_subtypes)
+ggsave("Data/04_i_the_power_of_boniferri.png",
+        plot = the_power_of_boniferri)
+
 
 # Remove Data -------------------------------------------------------------
 
+rm(cells_count_plot,
+   cells_type_plot,
+   plot_epithelial_subtypes,
+   the_power_of_boniferri,
+   ciliated_COPD,
+   ciliated_IPF,
+   COPD_against_IPF,
+   multinomial,
+   COPD_model,
+   IPF_model,
+   COPD_against_IPF_model,
+   multinomial_model,
+   sig_without_correction,
+   sig_with_bonferroni_correction,
+   significant_genes_without_correction,
+   significant_genes_with_correction
+)
