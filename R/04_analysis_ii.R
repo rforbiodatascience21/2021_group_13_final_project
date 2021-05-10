@@ -438,4 +438,7 @@ rm(data,
    heat_dendro,
    prefit,
    prefit_genes,
-   pca_fit)
+   pca_fit,
+   kclusts,
+   plot_k_clusters,
+   ui)
