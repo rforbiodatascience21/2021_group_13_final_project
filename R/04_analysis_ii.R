@@ -285,7 +285,7 @@ hcCOPD<- hclust(dist(dendroCOPD),
 COPD_clusters <- dendro_data(hcCOPD,
                              type = "rectangle")
 
-COPD_clusterplot<-ggplot() +
+COPD_clusterplot <- ggplot() +
   geom_segment(data = segment(COPD_clusters), 
                aes(x = x,
                    y = y, 
@@ -408,7 +408,16 @@ pca_fit <- prefit %>%
 
 # Save plots -------------------------------------------------------------------
 
-
+ggsave("Data/04_ii_plot_k_clusters.png",
+       plot = plot_k_clusters)
+ggsave("Data/04_ii_COPD_clusterplot.png",
+       plot = COPD_clusterplot)
+ggsave("Data/04_ii_IPF_clusterplot.png",
+       plot = IPF_clusterplot)
+ggsave("Data/04_ii_dendro_plot.png",
+       plot = dendro_plot)
+ggsave("Data/04_ii_heat/dendro_plot.png",
+       plot = heat_dendro)
 
 # Removing data ----------------------------------------------------------------
 
