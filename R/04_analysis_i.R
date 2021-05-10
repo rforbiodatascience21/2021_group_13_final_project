@@ -92,7 +92,7 @@ subtypes_epithelial <-
   pivot_wider(names_from = Subclass_Cell_Identity,
               values_from = cell_count) %>%
   ungroup() %>% 
-  pivot_longer(2:12,
+  pivot_longer("ATII_High-Surfactants":"Mystery_Disease_Epithelial",
                names_to = "CellType_Subclass",
                values_to = "cell_count") %>% 
   mutate(
@@ -151,7 +151,7 @@ ciliated <-
   
 ciliated_COPD <-
     ciliated %>% 
-    pivot_longer(cols = TSPAN6:ncol(data),
+    pivot_longer(cols = TSPAN6:ncol(ciliated),
                  names_to = "Gene",
                  values_to = "Counts") %>% 
     select(group,
@@ -170,7 +170,7 @@ ciliated_COPD <-
 # same for IPF
 ciliated_IPF <-
   ciliated %>% 
-  pivot_longer(cols = TSPAN6:ncol(data),
+  pivot_longer(cols = TSPAN6:ncol(ciliated),
                names_to = "Gene",
                values_to = "Counts") %>% 
   select(group,
@@ -188,7 +188,7 @@ ciliated_IPF <-
 
 COPD_against_IPF <-
   ciliated %>% 
-  pivot_longer(cols = TSPAN6:ncol(data),
+  pivot_longer(cols = TSPAN6:ncol(ciliated),
                names_to = "Gene",
                values_to = "Counts") %>% 
   select(group,
@@ -205,7 +205,7 @@ COPD_against_IPF <-
 
 multinomial <-
   ciliated %>% 
-  pivot_longer(cols = TSPAN6:ncol(data),
+  pivot_longer(cols = TSPAN6:ncol(ciliated),
                names_to = "Gene",
                values_to = "Counts") %>% 
   select(group,
