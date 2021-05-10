@@ -1,6 +1,9 @@
 # Define project functions ------------------------------------------------
 library(tidyverse)
 
+### ALONG THE PROCESS WE CHANGE THE CODE SO THAT WE DO NOT USE ANY OF THE 
+### FUNCTIONS EXCEPT FOR THE "normalise" FUNCTION
+
 ### loading functions ###-------------------------------------------------------
 get_exon_umicounts <- function(patient){
  
