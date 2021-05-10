@@ -352,13 +352,13 @@ the_power_of_boniferri <- significant_genes_without_correction +
 
 
 # Save Plots -------------------------------------------------------------------
-ggsave("Data/04_i_cells_count_plot.png", 
+ggsave("results/04_i_cells_count_plot.png", 
         plot = cells_count_plot)
-ggsave("Data/04_i_cells_type_plot.png",
+ggsave("results/04_i_cells_type_plot.png",
         plot = cells_type_plot)
-ggsave("Data/04_i_plot_epithelial_subtypes.png",
+ggsave("results/04_i_plot_epithelial_subtypes.png",
         plot = plot_epithelial_subtypes)
-ggsave("Data/04_i_the_power_of_boniferri.png",
+ggsave("results/04_i_the_power_of_boniferri.png",
         plot = the_power_of_boniferri)
 
 
