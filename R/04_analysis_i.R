@@ -372,14 +372,16 @@ significant_genes_with_correction <-
   
 the_power_of_boniferri <- 
   significant_genes_without_correction + 
+  theme(axis.text.x = element_text(angle = 45,
+                                   hjust = 1)) +
   significant_genes_with_correction +
+  theme(axis.text.x = element_text(angle = 45,
+                                   hjust = 1)) +
   plot_annotation(
     title = "Genes Identified As Significant"
-   # ,subtitle = 
-   # ,caption = 
-  )
-
-
+    # ,subtitle = 
+    # ,caption = 
+    )
 # Save Plots --------------------------------------------------------------
 
 ggsave("Data/04_i_cells_count_plot.png", 
