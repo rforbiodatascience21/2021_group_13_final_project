@@ -66,7 +66,7 @@ COPD_model <-
                                        TRUE ~ "unsignificant"))
 
 
-
+#Clustering, dendrograms and heatmaps
 
 dendro <- COPD_model%>%
   select(gene,p.value)%>%
@@ -98,3 +98,26 @@ heatmaply(sqrt(dendro), Colv = NULL, hclust_method = "average",
           xlab = "p value", ylab = "genes", main = "A smoking good plot on KOL",
           plot_method = "plotly", row_dend_left = TRUE
 ) 
+
+
+# PCA data preparation
+prefit <- ciliated_gois %>% 
+  pivot_wider(names_from = "gene",
+              values_from = "Counts")
+
+pca_fit <- prefit %>% 
+  select(CP:ncol(prefit))%>% 
+  prcomp(scale = TRUE)
+
+
+
+
+
+
+
+
+
+
+
+
+
