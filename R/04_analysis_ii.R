@@ -4,20 +4,16 @@ library("broom")
 library("dendextend")
 library("heatmapply")
 
-
 # Define functions -------------------------------------------------------------
 source(file = "R/99_project_functions.R")
-
 
 # Load data --------------------------------------------------------------------
 data <- read_csv("Data/03_data.csv")
 
-
 gois <- read_csv("Data/_raw/disease_genes.csv")
 
 
-#Wrangling
-
+# Wrangling --------------------------------------------------------------------
 ciliated <- data %>% 
   filter(Subclass_Cell_Identity == "Ciliated") %>% 
   pivot_longer(cols = TSPAN6:ncol(data),
@@ -29,8 +25,7 @@ ciliated_gois <- right_join(ciliated,
                             by=c("gene")) 
 
 
-#Preparing the COPD model vs Control
-
+# Preparing the COPD model vs Control
 ciliated_COPD <- ciliated_gois %>% 
   select(group,
          gene,
@@ -44,8 +39,8 @@ ciliated_COPD <- ciliated_gois %>%
   nest() %>% 
   ungroup()
 
-#Modelling the COPD vs Control 
 
+# Modelling the COPD vs Control 
 COPD_model <- ciliated_COPD %>% 
   mutate(mdl = map(data,
                    ~glm(group ~ Counts,
@@ -58,14 +53,14 @@ COPD_model <- ciliated_COPD %>%
   filter(term != "(Intercept)") %>% 
   mutate(adj_p.value = 
            p.adjust(p.value,
-                    method="bonferroni")) %>% 
+                    method = "bonferroni")) %>% 
   mutate(identified_as = case_when(p.value < 0.05 ~ "significant",
                                    TRUE ~ "unsignificant")) %>% 
   mutate(adj_identified_as = case_when(adj_p.value < 0.05 ~ "significant",
                                        TRUE ~ "unsignificant"))
 
-#Preparing the IPF model vs Control
 
+# Preparing the IPF model vs Control -------------------------------------------
 ciliated_IPF <- ciliated_gois %>% 
   select(group,
          gene,
@@ -80,8 +75,7 @@ ciliated_IPF <- ciliated_gois %>%
   ungroup()
 
 
-IPF_model <-
-  ciliated_IPF %>% 
+IPF_model <- ciliated_IPF %>% 
   mutate(mdl = map(data,
                    ~glm(group ~ Counts,
                         data = .x,
@@ -99,10 +93,7 @@ IPF_model <-
                                        TRUE ~ "unsignificant"))
 
 
-
-
-#Clustering, dendrograms and heatmaps
-
+# Clustering, dendrograms and heatmaps -----------------------------------------
 dendro <- COPD_model %>%
   select(gene,p.value) %>%
   filter(!is.na(p.value))
@@ -121,32 +112,32 @@ dendro_plot <- dend_row %>%
   plot
 
 
-
 dend_k <- find_k(dend_row)
 
 n_clusters <- plot(dend_k)
 
 
-#Plotting the relationship of genes by significance
-
+# Plotting the relationship of genes by significance ---------------------------
 heat_dendro <- heatmaply(sqrt(dendro),
                          Colv = NULL, 
                          hclust_method = "average", 
                          fontsize_row = 8,fontsize_col = 6,
-                         k_row = NA, margins = c(60,50, 70,90),
+                         k_row = NA, margins = c(60,
+                                                 50,
+                                                 70,
+                                                 90),
                          xlab = "p value", 
                          ylab = "genes", 
-                         main = "Clustering of gene expression by statistical significance",
+                         main = "Clustering of gene expression by significance",
                          plot_method = "plotly", 
-                         row_dend_left = TRUE
-)
+                         row_dend_left = TRUE)
 
 
 # PCA data preparation --- Dead end(sofus)
-
 prefit <- ciliated_gois %>% 
   pivot_wider(names_from = "gene",
               values_from = "Counts")
+
 
 prefit_genes <- prefit %>% 
   select(-mito_sum,
@@ -163,20 +154,33 @@ prefit_genes %>%
   select(CP) %>% 
   var(na.rm = TRUE)
 
+
 pca_fit <- prefit %>% 
   select(CP:ncol(prefit)) %>% # retain only numeric columns
   scale() %>% # scale data
   prcomp() # do PCA
 
 
+# Save plots -------------------------------------------------------------------
 
 
 
-
-
-
-
-
-
-
-
+# Removing data ----------------------------------------------------------------
+rm(data,
+   gois,
+   ciliated,
+   ciliated_gois,
+   ciliated_COPD,
+   COPD_model,
+   ciliated_IPF,
+   IPF_model,
+   dendro,
+   d,
+   dend_row,
+   dendro_plot,
+   dend_k,
+   n_clusters,
+   heat_dendro,
+   prefit,
+   prefit_genes,
+   pca_fit)
