@@ -94,34 +94,38 @@ IPF_model <- ciliated_IPF %>%
 
 
 # Clustering, dendrograms and heatmaps -----------------------------------------
-
 dendro <- COPD_model %>%
-  select(gene,p.value) %>%
+  select(gene,
+         p.value) %>%
   filter(!is.na(p.value))
 
 dendro <- column_to_rownames(dendro,
-                           var = "gene")
+                             var = "gene")
 
+hc <- hclust(dist(dendro),
+             "ave")
 
-hc<- hclust(dist(dendro), "ave")
-
-hcdata <- dendro_data(hc, type = "rectangle")
+hcdata <- dendro_data(hc,
+                      type = "rectangle")
 ggplot() +
   geom_segment(data = segment(hcdata), 
-               aes(x = x, y = y, xend = xend, yend = yend)
-  ) +
+               aes(x = x,
+                   y = y,
+                   xend = xend,
+                   yend = yend)) +
   geom_text(data = label(hcdata), 
-            aes(x = x, y = y, label = label, hjust = 0), 
-            size = 3
-  ) +
+            aes(x = x,
+                y = y,
+                label = label,
+                hjust = 0), 
+            size = 3) +
   coord_flip() +
-  scale_y_reverse(expand = c(0.2, 0))
+  scale_y_reverse(expand = c(0.2,
+                             0))
 
 ggdendrogram(hc)
 
-
 ggdendrogram(hc, rotate = TRUE)
-
 
 
 #A non-tidyverse compatible clustering method - NOT USED
